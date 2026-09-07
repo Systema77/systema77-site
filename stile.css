@@ -67,16 +67,17 @@ a{color:inherit; text-decoration:none}
   border-bottom:2px solid var(--linea); border-image:var(--neon) 1}
 .testata .marca{flex:1 1 100%; padding:.75rem 1rem .55rem; color:var(--giallo);
   font-family:var(--mono); font-size:.82rem; letter-spacing:.26em; text-transform:uppercase}
-.porte{flex:1 1 100%; display:grid; grid-template-columns:1fr 1fr;
+.porte{flex:1 1 100%; display:grid; grid-template-columns:1fr 1fr 1fr;
   border-top:2px solid var(--linea)}
 .porta{--luce:var(--carta); display:flex; flex-direction:column; gap:.05rem;
   padding:.6rem 1rem .7rem; min-width:0}
 .porta + .porta{border-left:2px solid var(--linea)}
 .porta .nome{font-family:var(--mono); font-size:.92rem; letter-spacing:.2em;
   text-transform:uppercase; color:var(--luce); white-space:nowrap}
-.porta .che{font-family:var(--serif); font-size:.9rem; line-height:1.3; color:var(--muto)}
+.porta .che{font-family:var(--serif); font-size:.86rem; line-height:1.3; color:var(--muto)}
 .porta.ego{--luce:var(--magenta)}
 .porta.soldi{--luce:var(--giallo)}
+.porta.chill{--luce:var(--ciano)}
 .porta:hover{background:#111}
 /* la porta in cui si e': nero su colore, come la voce attiva del menu */
 .porta[aria-current]{background:var(--luce)}
@@ -86,7 +87,7 @@ a{color:inherit; text-decoration:none}
   .testata{flex-wrap:nowrap; align-items:stretch}
   .testata .marca{flex:0 0 auto; display:flex; align-items:center; padding:.8rem 1.4rem}
   .porte{flex:0 0 auto; border-top:0; border-left:2px solid var(--linea)}
-  .porta{padding:.55rem 1.4rem; min-width:11rem}
+  .porta{padding:.55rem 1.4rem; min-width:8.5rem}
   .testata .galassia-su{display:flex; align-items:center; margin-left:auto; padding:0 1.4rem;
     font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
     color:var(--muto); white-space:nowrap}
@@ -101,6 +102,7 @@ nav.menu{display:flex; align-items:center; gap:1.35rem;
   overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none}
 /* la riga delle stanze prende il colore della porta in cui si e' */
 nav.menu.ego a[aria-current]{background:var(--magenta)}
+nav.menu.chill a[aria-current]{background:var(--ciano)}
 nav.menu::-webkit-scrollbar{display:none}
 nav.menu a{color:var(--muto); white-space:nowrap; padding:.2rem 0; flex:0 0 auto}
 nav.menu a:hover{color:var(--carta)}
