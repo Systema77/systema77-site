@@ -22,6 +22,33 @@ e un gioco.
 | `storie.html` | rinvio: l'indirizzo vecchio porta alla casa editrice |
 | `bilancia.html` | **staccata dal sito** — vedi sotto |
 
+## Le due porte
+
+Dal 2026-09-07 la testata del sito ha **due porte**, ratificate dal Direttore:
+
+| porta | colore | dove va | cosa c'è dietro |
+|---|---|---|---|
+| **SOLDI** — *per voi* | giallo `#F2E205` | `servizi.html` | la metà che fattura: lo shop (magliette, adesivi, libri) e le commesse — automazione, immagine, video |
+| **EGO** — *per me* | magenta `#FF2E88` | `officina.html` | il laboratorio personale: officina, immagini, film, musica |
+
+**Perché due e non un menu.** Il sito faceva due mestieri con una voce sola. Adesso
+chi arriva sceglie prima *di chi è* la cosa che sta guardando: se è per lui o se è
+del Direttore. La riga sotto la testata elenca le stanze **della porta in cui si è**,
+e cambia con la porta.
+
+**Chill · Progetti · Divulgazione** non sono in testata: stanno nella mappa a piè di
+pagina, raggiungibile dal rinvio «la galassia ↓». Non sono una terza porta — sono
+stanze che non appartengono a nessuna delle due metà.
+
+**Il gioco resta fuori dalla porta dei soldi.** Ai giocatori non si vende niente:
+sono la base organica, non il cliente. `animagame.io` sta nella mappa, in verde.
+
+⚠️ **Se aggiungi una pagina**, decidi a quale metà appartiene e mettila nella riga
+delle stanze giusta (`nav.menu.ego` o `nav.menu.soldi`). Una pagina senza metà
+esiste ma non si raggiunge: è successo a `divulgazione.html`, che il 07/09 non era
+in nessuno dei due posti.
+
+
 ## Le regole della casa
 
 1. **La regola tipografica**, e viene prima di tutte. Quattro caratteri, quattro mestieri:
