@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAGLIETTE — SYSTEMA 77</title>
+<meta name="description" content="SYSTEMA 77 — Magliette: scegli il colore, scrivi la tua frase, guarda come viene. L'idea la metti tu, la stampa la facciamo noi.">
+<!-- Come il sito si vede FUORI da se': la tab del browser e l'anteprima di un
+     link incollato in chat. Favicon inline (zero file), immagine di condivisione
+     con la stessa palette, nessuna foto inventata. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230A0A0A'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23F2E205' stroke-width='7'/%3E%3Ccircle cx='32' cy='32' r='7.5' fill='%23F2E205'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SYSTEMA 77">
+<meta property="og:title" content="MAGLIETTE — SYSTEMA 77">
+<meta property="og:description" content="SYSTEMA 77 — Magliette: scegli il colore, scrivi la tua frase, guarda come viene. L'idea la metti tu, la stampa la facciamo noi.">
+<meta property="og:url" content="https://systema77.com/magliette.html">
+<meta property="og:image" content="https://systema77.com/og-systema77.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://systema77.com/og-systema77.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="stile.css">
+</head>
+<body>
+
+<header class="testata">
+  <a class="marca" href="index.html">&#9673; SYSTEMA 77</a>
+  <nav class="porte" aria-label="Le tre porte">
+    <a class="porta soldi" href="servizi.html" aria-current="true">
+      <span class="nome">SOLDI</span>
+      <span class="che">per voi</span>
+    </a>
+    <a class="porta ego" href="officina.html">
+      <span class="nome">EGO</span>
+      <span class="che">per me</span>
+    </a>
+    <a class="porta chill" href="chill.html">
+      <span class="nome">CHILL</span>
+      <span class="che">per l’aria</span>
+    </a>
+  </nav>
+  <a class="galassia-su" href="#galassia">la galassia &darr;</a>
+</header>
+<nav class="menu soldi" aria-label="Le stanze di SOLDI">
+  <a href="servizi.html">Servizi</a>
+  <a href="editrice.html">Casa editrice</a>
+  <a href="magliette.html" aria-current="page">Magliette</a>
+  <span class="spazio"></span>
+</nav>
+
+<main>
+
+<div class="annuncio">
+  <div class="dentro due">
+    <div>
+      <div class="kick">shop &middot; <b>il primo scaffale</b></div>
+      <h1>MAGLIETTE<span class="g">.</span></h1>
+    </div>
+    <div class="destra">
+      <p class="claim">L&rsquo;IDEA<span class="g">.</span> LA METTI TU<span class="g">.</span></p>
+      <p class="dice forte">Scegli il colore, scrivi la tua frase, guarda come viene.
+         Poi ce la mandi e la stampiamo.</p>
+      <!-- LO STATO, e va detto in testa: il banco NON incassa. I tre muri
+           (metodo di pagamento su Printful, strada d'incasso, posizione
+           fiscale) sono del Direttore, non miei. Un banco che finge di
+           incassare e' peggio di un banco spento. -->
+      <p style="margin-top:1.4rem"><span class="stato giallo">in prova &middot; non incassa ancora</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IL BANCO ═══════════════════════════════════════════════════════════
+     Stampi FISSI, non generati: quattro layout, la frase entra e si adatta
+     (corpo, a capo, spaziatura). Deterministico, zero euro a richiesta,
+     niente da moderare, e non puo' sbagliare. Il layout generato da una AI
+     per ogni frase e' il gradino dopo, quando lo shop incassa gia'. -->
+<section class="blocco" id="banco">
+  <div class="dentro">
+    <h2>IL BANCO<span style="color:var(--giallo)">.</span></h2>
+
+    <div class="banco">
+
+      <div class="vetro">
+        <svg id="anteprima" viewBox="0 0 600 660" role="img" aria-labelledby="tit-ant">
+          <title id="tit-ant">Anteprima della maglietta con la frase scritta qui sotto</title>
+          <defs>
+            <linearGradient id="volume" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0"    stop-color="#000" stop-opacity=".34"/>
+              <stop offset=".24"  stop-color="#000" stop-opacity="0"/>
+              <stop offset=".76"  stop-color="#000" stop-opacity="0"/>
+              <stop offset="1"    stop-color="#000" stop-opacity=".34"/>
+            </linearGradient>
+            <!-- La luce dello studio. Serve: senza, la maglietta NERA sparisce
+                 sul fondo nero e il negozio mostra il vuoto. Visto a schermo
+                 il 07/09, non dedotto. -->
+            <radialGradient id="banco-luce" cx=".5" cy=".42" r=".62">
+              <stop offset="0"   stop-color="#F2E205" stop-opacity=".10"/>
+              <stop offset=".55" stop-color="#F2E205" stop-opacity=".03"/>
+              <stop offset="1"   stop-color="#F2E205" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="600" height="660" fill="url(#banco-luce)"/>
+
+          <!-- la sagoma: spalle, maniche, fianchi, orlo. Un capo, non un rettangolo. -->
+          <path id="corpo" d="M235 84 C233 66 218 56 200 60 L70 100 C56 105 49 120 55 134
+                              L99 238 C103 250 115 256 127 251 L170 233 L170 600
+                              C170 610 178 618 188 618 L412 618 C422 618 430 610 430 600
+                              L430 233 L473 251 C485 256 497 250 501 238 L545 134
+                              C551 120 544 105 530 100 L400 60 C382 56 367 66 365 84
+                              C365 84 352 120 300 120 C248 120 235 84 235 84 Z"/>
+          <path id="volumeCapo" d="M235 84 C233 66 218 56 200 60 L70 100 C56 105 49 120 55 134
+                              L99 238 C103 250 115 256 127 251 L170 233 L170 600
+                              C170 610 178 618 188 618 L412 618 C422 618 430 610 430 600
+                              L430 233 L473 251 C485 256 497 250 501 238 L545 134
+                              C551 120 544 105 530 100 L400 60 C382 56 367 66 365 84
+                              C365 84 352 120 300 120 C248 120 235 84 235 84 Z"
+                fill="url(#volume)" stroke="none"/>
+          <!-- il collo: la costina, ed e' il dettaglio che fa capire che e' una maglietta -->
+          <path id="collo" d="M235 84 C235 84 248 120 300 120 C352 120 365 84 365 84" fill="none"/>
+          <path id="collo2" d="M243 92 C243 92 256 132 300 132 C344 132 357 92 357 92" fill="none"/>
+          <!-- due pieghe appena accennate: volume, non disegno -->
+          <path id="piega1" d="M212 470 C224 520 220 566 212 604" fill="none"/>
+          <path id="piega2" d="M388 470 C376 520 380 566 388 604" fill="none"/>
+
+          <g id="stampa"></g>
+          <!-- il righello invisibile: serve a misurare il testo prima di scriverlo -->
+          <text id="metro" x="-9999" y="-9999" aria-hidden="true"></text>
+        </svg>
+        <p class="riga-mono sotto-vetro" id="didascalia">anteprima &middot; non &egrave; una foto del prodotto</p>
+      </div>
+
+      <form class="comandi" id="comandi" novalidate>
+
+        <fieldset>
+          <legend>Il colore</legend>
+          <div class="colori" id="colori" role="radiogroup" aria-label="Il colore della maglietta"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>La frase</legend>
+          <input id="frase" type="text" maxlength="48" autocomplete="off"
+                 value="FATTO DA NOI UMANI" aria-describedby="conta">
+          <p class="riga-mono" id="conta">18/48</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Lo stampo</legend>
+          <div class="stampi" id="stampi" role="radiogroup" aria-label="Lo stampo"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>La taglia</legend>
+          <div class="taglie" id="taglie" role="radiogroup" aria-label="La taglia"></div>
+        </fieldset>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══ IL SÌ ══════════════════════════════════════════════════════════════
+     L'unico modo di dire di si' che oggi e' vero: la richiesta parte, il
+     prezzo arriva nella risposta, e nessuno paga niente qui dentro. Non
+     c'e' un carrello perche' non c'e' una cassa: dirlo costa una riga,
+     fingerlo costerebbe la fiducia del primo sconosciuto che ci arriva. -->
+<section class="blocco" id="ordina">
+  <div class="dentro due">
+    <div>
+      <h2>DIMMI DI<br>S&Igrave;<span style="color:var(--giallo)">.</span></h2>
+    </div>
+    <div class="destra">
+      <p class="dice forte">Qui non paghi niente e non lasci una carta.
+         Mandi quello che hai composto, e ti rispondiamo con <b>prezzo, tempi
+         e come si paga</b> prima di qualsiasi euro.</p>
+      <p class="dice piccola">Il prezzo non &egrave; ancora fissato: le magliette sono il
+         primo prodotto e la prima serie si quota sulla richiesta vera, non su un
+         listino inventato.</p>
+
+      <p class="riga-mono etichetta-richiesta">quello che parte, per intero:</p>
+      <pre class="richiesta" id="richiesta" aria-live="polite"></pre>
+
+      <a class="bottone pieno" id="manda" href="#">Manda la richiesta</a>
+      <p class="riga-mono">si apre la tua posta &middot; pierluigidepalo@gmail.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LA LINEA EDITORIALE ════════════════════════════════════════════════
+     Parole del Direttore, 06/09. Non e' il tono: e' il prodotto. -->
+<section class="blocco" id="linea">
+  <div class="dentro due">
+    <div>
+      <h2>CHI SCRIVE<br>LA FRASE<span style="color:var(--magenta)">.</span></h2>
+    </div>
+    <div class="destra">
+      <p class="claim" style="font-size:clamp(1.1rem,2.4vw,1.7rem)">FATTO DA NOI UMANI.</p>
+      <p class="dice forte">Ironia, senso politico, franco e libero.
+         L&rsquo;idea la mettono le persone: l&rsquo;arguzia, la posizione, la libert&agrave;
+         di dirlo. Il sistema la esegue e basta.</p>
+      <p class="dice">Non &egrave; un generatore di frasi. &Egrave; il banco dove l&rsquo;idea di una
+         persona diventa un oggetto, <b>senza passare da una piattaforma che le dice
+         cosa pu&ograve; dire</b>.</p>
+      <p style="margin-top:1.5rem"><span class="stato">nessun social &middot; nessun profilo &middot; nessuna coda da rispettare</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="blocco" id="come">
+  <div class="dentro">
+    <h2>COME VA A FINIRE<span style="color:var(--giallo)">.</span></h2>
+    <div class="passi">
+      <div class="passo">
+        <div class="n">1</div>
+        <h3>Componi</h3>
+        <p class="dice">Colore, frase, stampo, taglia. Qui sopra, adesso, senza registrarti.</p>
+      </div>
+      <div class="passo">
+        <div class="n">2</div>
+        <h3>Mandi</h3>
+        <p class="dice">Ti rispondiamo con il file di stampa vero, il prezzo e i tempi.
+           Fin qui non hai speso niente.</p>
+      </div>
+      <div class="passo">
+        <div class="n">3</div>
+        <h3>Arriva</h3>
+        <p class="dice">La stampa e la spedizione le fa il fornitore, non noi:
+           parte da un magazzino, non da un salotto.</p>
+      </div>
+    </div>
+    <p class="dice piccola" style="margin-top:1.6rem">Su misura, uno alla volta: non c&rsquo;&egrave; un
+       minimo d&rsquo;ordine e non c&rsquo;&egrave; un magazzino nostro da svuotare.</p>
+  </div>
+</section>
+
+</main>
+
+<style>
+/* ── IL BANCO ────────────────────────────────────────────────────────────
+   Giallo ACID #F2E205: lo shop sta DENTRO systema77.com, dietro la porta
+   SOLDI, e il colore segue il mestiere della stanza. Non l'ambra del
+   vestito di luglio, che dava il negozio su un dominio suo. — 07/09
+   Del vestito di luglio resta tutto il resto: prezzo mono, mai rosso da
+   sconto, CTA in outline. */
+.banco{display:grid; grid-template-columns:1fr; gap:2.2rem; margin-top:2.2rem}
+.vetro{border:2px solid var(--linea); background:#131313; padding:1.2rem}
+/* Il capo non cresce oltre la sua misura: a 1280 px, senza tetto, la
+   maglietta diventava alta 1100 px e i comandi accanto sparivano. */
+#anteprima{display:block; width:100%; max-width:440px; height:auto; margin:0 auto}
+#anteprima #corpo{stroke:var(--linea-viva); stroke-width:2}
+#anteprima #collo, #anteprima #collo2{stroke-width:2}
+#anteprima #piega1, #anteprima #piega2{stroke-width:2; opacity:.45}
+.sotto-vetro{margin-top:.9rem; color:var(--muto)}
+.comandi fieldset{border:0; margin:0 0 1.7rem}
+.comandi legend{font-family:var(--mono); font-size:.72rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muto); margin-bottom:.7rem}
+.comandi input{width:100%; background:#0D0D0D; color:var(--carta);
+  border:2px solid var(--linea); padding:.85rem 1rem; font-family:var(--anton);
+  font-size:1.15rem; letter-spacing:.04em; text-transform:uppercase}
+.comandi input:focus{outline:none; border-color:var(--giallo)}
+.comandi #conta{margin-top:.5rem; color:var(--muto)}
+.colori, .stampi, .taglie{display:flex; flex-wrap:wrap; gap:.5rem}
+.scelta{background:transparent; color:var(--testo); border:2px solid var(--linea);
+  font-family:var(--mono); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:.6rem .85rem; cursor:pointer; display:flex; align-items:center; gap:.5rem}
+.scelta:hover{border-color:var(--linea-viva); color:var(--carta)}
+.scelta[aria-checked="true"]{border-color:var(--giallo); color:var(--giallo)}
+.scelta .goccia{width:15px; height:15px; border:1px solid var(--linea-viva); flex:0 0 auto}
+.etichetta-richiesta{margin-top:1.8rem; color:var(--muto)}
+.richiesta{margin-top:.6rem; border:2px solid var(--linea); background:#0D0D0D;
+  padding:1rem 1.1rem; font-family:var(--mono); font-size:.82rem; line-height:1.9;
+  color:var(--testo); white-space:pre-wrap; word-break:break-word}
+@media (min-width:900px){
+  .banco{grid-template-columns:1.1fr .9fr; gap:2.8rem; align-items:start}
+}
+</style>
+
+<script>
+/* ── GLI STAMPI FISSI ────────────────────────────────────────────────────
+   Quattro layout, non uno generato. La frase entra e si adatta: si spezza
+   in righe, si misura davvero (getComputedTextLength) e il corpo si sceglie
+   perche' STIA nell'area di stampa, non perche' l'abbiamo indovinato.
+   Il carattere arriva dalla rete: quando arriva, si rimisura. Se non arriva
+   (rete chiusa, collaudo) si misura il ripiego e la maglietta esce lo stesso. */
+(function () {
+  'use strict';
+
+  /* L'area di stampa, in unita' della sagoma: petto, centrato. */
+  var AREA = { x: 300, cima: 186, largo: 218, alto: 176 };
+
+  /* ⚠️ I colori sono quelli su cui si stampa, ma il catalogo del fornitore
+     NON e' stato interrogato da questa sessione: api.printful.com risponde
+     403 al CONNECT dal proxy. La variante esatta si conferma nella risposta
+     alla richiesta, e per questo la pagina non promette una consegna. */
+  var COLORI = [
+    { id: 'nero',   nome: 'Nero',   tela: '#191919', filo: '#454545', inchiostro: '#F7F7F2' },
+    { id: 'bianco', nome: 'Bianco', tela: '#EFEFE9', filo: '#CFCFC7', inchiostro: '#111111' },
+    { id: 'grigio', nome: 'Grigio', tela: '#8A8A84', filo: '#6E6E68', inchiostro: '#141414' },
+    { id: 'navy',   nome: 'Navy',   tela: '#1C2536', filo: '#334059', inchiostro: '#F7F7F2' }
+  ];
+
+  var STAMPI = [
+    { id: 'blocco', nome: 'Blocco' },
+    { id: 'nastro', nome: 'Nastro' },
+    { id: 'timbro', nome: 'Timbro' },
+    { id: 'pila',   nome: 'Pila'   }
+  ];
+
+  var TAGLIE = ['S', 'M', 'L', 'XL', 'XXL'];
+
+  var scelto = { colore: COLORI[0], stampo: 'blocco', taglia: 'L' };
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('anteprima');
+  var gStampa = document.getElementById('stampa');
+  var metro = document.getElementById('metro');
+  var campo = document.getElementById('frase');
+  var conta = document.getElementById('conta');
+  var richiesta = document.getElementById('richiesta');
+  var manda = document.getElementById('manda');
+
+  /* ── i comandi, costruiti dai dati: una voce sola da cambiare ────────── */
+  function bottoni(dove, voci, valore, scegli) {
+    voci.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'scelta';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-checked', String(valore(v)));
+      if (v.tela) {
+        var g = document.createElement('span');
+        g.className = 'goccia';
+        g.style.background = v.tela;
+        b.appendChild(g);
+      }
+      b.appendChild(document.createTextNode(v.nome || v));
+      b.addEventListener('click', function () {
+        scegli(v);
+        Array.prototype.forEach.call(dove.children, function (altro) {
+          altro.setAttribute('aria-checked', 'false');
+        });
+        b.setAttribute('aria-checked', 'true');
+        disegna();
+      });
+      dove.appendChild(b);
+    });
+  }
+
+  /* ── il righello: quanto e' larga questa riga, davvero ───────────────── */
+  function largaQuanto(testo, famiglia, spaziatura) {
+    metro.setAttribute('font-family', famiglia);
+    metro.setAttribute('font-size', '100');
+    metro.setAttribute('letter-spacing', String(spaziatura || 0));
+    metro.textContent = testo;
+    return metro.getComputedTextLength() || testo.length * 55;
+  }
+
+  /* ── a capo: si prova da 1 a max righe e vince quella che fa il corpo
+        piu' grande. Bilanciata, non greedy al primo traboccamento. ────── */
+  function spezza(parole, n) {
+    if (n <= 1) return [parole.join(' ')];
+    var perRiga = Math.ceil(parole.length / n);
+    var righe = [];
+    for (var i = 0; i < parole.length; i += perRiga) righe.push(parole.slice(i, i + perRiga).join(' '));
+    return righe;
+  }
+
+  function componi(testo, famiglia, spaziatura, maxRighe, interlinea) {
+    var parole = testo.split(/\s+/).filter(Boolean);
+    if (!parole.length) return { righe: [], corpo: 0 };
+    var meglio = null;
+    for (var n = 1; n <= Math.min(maxRighe, parole.length); n++) {
+      var righe = spezza(parole, n);
+      var piuLarga = 0;
+      righe.forEach(function (r) {
+        piuLarga = Math.max(piuLarga, largaQuanto(r, famiglia, spaziatura));
+      });
+      var perLargo = AREA.largo / piuLarga * 100;
+      var perAlto = AREA.alto / (righe.length * interlinea);
+      var corpo = Math.min(perLargo, perAlto);
+      if (!meglio || corpo > meglio.corpo) meglio = { righe: righe, corpo: corpo };
+    }
+    return meglio;
+  }
+
+  function riga(testo, y, corpo, famiglia, colore, spaziatura, ancora, x) {
+    var t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', String(x === undefined ? AREA.x : x));
+    t.setAttribute('y', String(y));
+    t.setAttribute('text-anchor', ancora || 'middle');
+    t.setAttribute('font-family', famiglia);
+    t.setAttribute('font-size', String(corpo));
+    t.setAttribute('fill', colore);
+    if (spaziatura) t.setAttribute('letter-spacing', String(spaziatura * corpo));
+    t.textContent = testo;
+    gStampa.appendChild(t);
+    return t;
+  }
+
+  var ANTON = "'Anton', Impact, sans-serif";
+  var MONO = "'Share Tech Mono', ui-monospace, Menlo, monospace";
+
+  function stampa(testo, colore) {
+    while (gStampa.firstChild) gStampa.removeChild(gStampa.firstChild);
+    testo = testo.trim().toUpperCase();
+    if (!testo) return;
+
+    var inchiostro = colore.inchiostro;
+    var m, i, y, interlinea;
+
+    if (scelto.stampo === 'blocco') {
+      m = componi(testo, ANTON, 0, 3, 1.06);
+      interlinea = m.corpo * 1.06;
+      y = AREA.cima + (AREA.alto - m.righe.length * interlinea) / 2 + m.corpo * 0.8;
+      for (i = 0; i < m.righe.length; i++) riga(m.righe[i], y + i * interlinea, m.corpo, ANTON, inchiostro, 0);
+
+    } else if (scelto.stampo === 'nastro') {
+      /* il nastro e' giallo su qualunque tela: il colore della casa, e il
+         nero sopra si legge sempre. Mai rosso da sconto. */
+      m = componi(testo, ANTON, 0, 2, 1.04);
+      m.corpo = Math.min(m.corpo, 46);
+      interlinea = m.corpo * 1.04;
+      var altezzaNastro = m.righe.length * interlinea + m.corpo * 0.62;
+      var cimaNastro = AREA.cima + (AREA.alto - altezzaNastro) / 2;
+      var r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', String(AREA.x - AREA.largo / 2 - 8));
+      r.setAttribute('y', String(cimaNastro));
+      r.setAttribute('width', String(AREA.largo + 16));
+      r.setAttribute('height', String(altezzaNastro));
+      r.setAttribute('fill', '#F2E205');
+      gStampa.appendChild(r);
+      y = cimaNastro + m.corpo * 0.62 + m.corpo * 0.78;
+      for (i = 0; i < m.righe.length; i++) riga(m.righe[i], y + i * interlinea, m.corpo, ANTON, '#0A0A0A', 0);
+
+    } else if (scelto.stampo === 'timbro') {
+      m = componi(testo, MONO, 0.18, 3, 1.5);
+      m.corpo = Math.min(m.corpo, 30);
+      interlinea = m.corpo * 1.5;
+      var alto = m.righe.length * interlinea + m.corpo * 1.1;
+      var cima = AREA.cima + (AREA.alto - alto) / 2;
+      var box = document.createElementNS(NS, 'rect');
+      box.setAttribute('x', String(AREA.x - AREA.largo / 2 - 6));
+      box.setAttribute('y', String(cima));
+      box.setAttribute('width', String(AREA.largo + 12));
+      box.setAttribute('height', String(alto));
+      box.setAttribute('fill', 'none');
+      box.setAttribute('stroke', inchiostro);
+      box.setAttribute('stroke-width', '3');
+      gStampa.appendChild(box);
+      y = cima + m.corpo * 1.1 + m.corpo * 0.2;
+      for (i = 0; i < m.righe.length; i++) {
+        /* la spaziatura sposta il centro: si compensa a mano, o il testo scappa a destra */
+        riga(m.righe[i], y + i * interlinea, m.corpo, MONO, inchiostro, 0.18,
+             'middle', AREA.x + m.corpo * 0.09);
+      }
+
+    } else { /* pila: una parola per riga, a bandiera */
+      /* una parola per riga, ma «E», «DI», «A» da sole sembrano un errore
+         di stampa: si appoggiano alla parola dopo. */
+      var grezze = testo.split(/\s+/).filter(Boolean), parole = [];
+      for (i = 0; i < grezze.length; i++) {
+        if (grezze[i].length <= 2 && grezze[i + 1]) { parole.push(grezze[i] + ' ' + grezze[i + 1]); i++; }
+        else parole.push(grezze[i]);
+      }
+      parole = parole.slice(0, 5);
+      var piuLarga = 0;
+      parole.forEach(function (p) { piuLarga = Math.max(piuLarga, largaQuanto(p, ANTON, 0)); });
+      var corpo = Math.min(AREA.largo / piuLarga * 100, AREA.alto / (parole.length * 0.94));
+      interlinea = corpo * 0.94;
+      y = AREA.cima + (AREA.alto - parole.length * interlinea) / 2 + corpo * 0.8;
+      for (i = 0; i < parole.length; i++) {
+        riga(parole[i], y + i * interlinea, corpo, ANTON, inchiostro, 0, 'start', AREA.x - AREA.largo / 2);
+      }
+    }
+  }
+
+  /* ── quello che parte: si vede per intero, non c'e' niente di nascosto ── */
+  function testoRichiesta() {
+    return 'MAGLIETTA SYSTEMA 77\n'
+         + 'colore:  ' + scelto.colore.nome + '\n'
+         + 'taglia:  ' + scelto.taglia + '\n'
+         + 'stampo:  ' + scelto.stampo + '\n'
+         + 'frase:   ' + (campo.value.trim().toUpperCase() || '(vuota)');
+  }
+
+  function disegna() {
+    var c = scelto.colore;
+    document.getElementById('corpo').setAttribute('fill', c.tela);
+    document.getElementById('corpo').style.stroke = c.filo;
+    document.getElementById('collo').style.stroke = c.filo;
+    document.getElementById('collo2').style.stroke = c.filo;
+    document.getElementById('piega1').style.stroke = c.filo;
+    document.getElementById('piega2').style.stroke = c.filo;
+    stampa(campo.value, c);
+
+    conta.textContent = campo.value.length + '/48';
+    var t = testoRichiesta();
+    richiesta.textContent = t;
+    manda.setAttribute('href', 'mailto:pierluigidepalo@gmail.com'
+      + '?subject=' + encodeURIComponent('SYSTEMA 77 — una maglietta')
+      + '&body=' + encodeURIComponent(t + '\n\nCome mi rispondete: '));
+  }
+
+  bottoni(document.getElementById('colori'), COLORI,
+    function (v) { return v.id === scelto.colore.id; },
+    function (v) { scelto.colore = v; });
+  bottoni(document.getElementById('stampi'), STAMPI,
+    function (v) { return v.id === scelto.stampo; },
+    function (v) { scelto.stampo = v.id; });
+  bottoni(document.getElementById('taglie'), TAGLIE.map(function (t) { return { nome: t }; }),
+    function (v) { return v.nome === scelto.taglia; },
+    function (v) { scelto.taglia = v.nome; });
+
+  campo.addEventListener('input', disegna);
+  disegna();
+
+  /* Il carattere arriva dopo il primo disegno: quando arriva, si rimisura.
+     Se la rete e' chiusa la promessa si risolve lo stesso e resta il ripiego. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(disegna);
+})();
+</script>
+
+<!-- LA CODA porta la galassia: da qualunque punto del sito si vede la mappa
+     intera, e il colore dice se si resta in casa o si cambia pianeta. -->
+<footer>
+  <div class="dentro">
+    <p class="titolo-coda">la galassia</p>
+<div class="galassia" id="galassia">
+  <a class="stella qui" href="servizi.html">
+    <span class="nome">Servizi</span>
+    <span class="che">automazione, produzione per terzi, ricerca e sviluppo</span>
+  </a>
+  <a class="stella qui" href="editrice.html">
+    <span class="nome">Casa editrice</span>
+    <span class="che">produciamo storie: libri, e film quando è la forma giusta</span>
+  </a>
+  <a class="stella qui" href="officina.html">
+    <span class="nome">Officina</span>
+    <span class="che">immagini ferme, immagini in movimento, suono</span>
+  </a>
+  <a class="stella qui" href="progetti.html">
+    <span class="nome">Progetti</span>
+    <span class="che">quello che costruiamo e che non esisteva</span>
+  </a>
+  <a class="stella qui" href="chill.html">
+    <span class="nome">Chill</span>
+    <span class="che">le cose che si tengono accese mentre si fa altro</span>
+  </a>
+  <a class="stella qui" href="divulgazione.html">
+    <span class="nome">Divulgazione</span>
+    <span class="che">quello che abbiamo capito, spiegato a chi non è del mestiere</span>
+  </a>
+  <a class="stella qui" href="aura.html">
+    <span class="nome">AURA</span>
+    <span class="che">il meteo a icone, e una risposta a quello che chiedi</span>
+  </a>
+  <a class="stella verde" href="https://animagame.io" rel="noopener">
+    <span class="nome">Anima Game &#8599;</span>
+    <span class="che">il gioco a invito: serve una carta vera</span>
+    <span class="dove">animagame.io</span>
+  </a>
+  <a class="stella magenta" href="https://cyberboomer.ninja" rel="noopener">
+    <span class="nome">Cyber Boomer &#8599;</span>
+    <span class="che">la divulgazione: la tecnologia spiegata a chi non ci è nato dentro</span>
+    <span class="dove">cyberboomer.ninja</span>
+  </a>
+  <a class="stella ciano" href="radio.html">
+    <span class="nome">Radio Anima &#8599;</span>
+    <span class="che">solo musica nostra, con i diritti in chiaro</span>
+    <span class="dove">radio-anima.pages.dev</span>
+  </a>
+</div>
+<p class="galassia-legenda">
+  <span><i class="g"></i>si resta qui</span>
+  <span><i class="a"></i>un altro pianeta della galassia</span>
+</p>
+    <div class="coda-riga">
+      <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
+      <span><a href="mailto:pierluigidepalo@gmail.com">scriveteci</a> &middot; <a href="index.html">home</a></span>
+    </div>
+  </div>
+</footer>
+<script src="s77.js" defer></script>
+</body>
+</html>
