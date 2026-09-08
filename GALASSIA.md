@@ -16,9 +16,18 @@ node strumenti/galassia.mjs
 |---|---|---|---|---|
 | `systema77.com` | l'agenzia, il centro | giallo `#F2E205` con magenta e ciano | `systema77-site` | `strumenti/collaudo.mjs` |
 | `animagame.io` | il gioco, a invito | verde `#38E08A`, mai fondale | `animagame-site` | `strumenti/collaudo.mjs` |
-| `cyberboomer.ninja` | la divulgazione, la voce | blu-link `#5C7CFF` | `cyberboomer-ninja-site` | `strumenti/collaudo.mjs` (di FLUX) |
+| `cyberboomer.ninja` | la divulgazione, la voce — dall'08/09 l'archivio | blu-link `#5C7CFF` | `cyberboomer-ninja-site` | `strumenti/collaudo.mjs` (di FLUX, riscritto a due mani l'08/09) |
 | `anima.solar` | una landing: «in sviluppo» | ambra `#C9A15E` | `anima-solar-site` | nessuno |
 | `radio-anima.pages.dev` | la radio, in prova | — | **nessuno** (vedi sotto) | nessuno |
+| `systema77.film` | il laboratorio: pellicola + AI — **in allestimento** dall'08/09 | — | `systema77-film-site`, **da creare** | `strumenti/collaudo.mjs`, quando nascerà |
+
+La sesta casa è nel registro **prima di esistere**, apposta (08/09): il giro
+non pretende ancora le porte verso di lei, ma vieta a ogni casa di linkarla
+finché è «in allestimento» — un link a un dominio non comprato è un vicolo
+cieco. Quando va online si toglie lo `stato` dal registro, poi le pagine, poi
+il giro. E dall'08/09 un guardiano che esce verde **senza aver aperto un
+browser** il giro lo segna rosso: verde cieco. Il giro fatto da una macchina
+con un browser vero è `.github/workflows/giro-galassia.yml`.
 
 La radio è l'eccezione, e va detta: **non ha un repo**. La sua sorgente sta in
 `animagame-site/radio/` sul Mac, fuori da ogni git apposta — l'onda pesa ~6 MB

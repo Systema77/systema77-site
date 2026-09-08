@@ -1,21 +1,26 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
-  "aggiornato": "2026-09-06",
+  "aggiornato": "2026-09-08",
 
   "case": {
+    "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
     "systema77.com":         { "repo": "systema77-site",        "voce": "l'agenzia, il centro",          "colore": "#F2E205", "guardiano": "strumenti/collaudo.mjs" },
     "animagame.io":          { "repo": "animagame-site",        "voce": "il gioco, a invito",             "colore": "#38E08A", "guardiano": "strumenti/collaudo.mjs" },
-    "cyberboomer.ninja":     { "repo": "cyberboomer-ninja-site","voce": "la divulgazione",                "colore": "#5C7CFF", "guardiano": "strumenti/collaudo.mjs" },
+    "cyberboomer.ninja":     { "repo": "cyberboomer-ninja-site","voce": "la divulgazione, l'archivio",    "colore": "#5C7CFF", "guardiano": "strumenti/collaudo.mjs" },
     "anima.solar":           { "repo": "anima-solar-site",      "voce": "una landing: in sviluppo",       "colore": "#C9A15E", "guardiano": null },
-    "radio-anima.pages.dev": { "repo": null,                    "voce": "la radio, in prova: sorgente fuori da git",  "colore": null,   "guardiano": null }
+    "radio-anima.pages.dev": { "repo": null,                    "voce": "la radio, in prova: sorgente fuori da git",  "colore": null,   "guardiano": null },
+    "systema77.film":        { "repo": "systema77-film-site",   "voce": "il laboratorio: pellicola + AI, il cinema, i servizi", "colore": null, "guardiano": "strumenti/collaudo.mjs",
+                               "stato": "in allestimento", "dal": "2026-09-08",
+                               "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2): il dominio va comprato (ROGUE, col suo ok) e il repo nasce sul modello delle case. Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio." }
   },
 
   "porte": {
-    "_": "da ogni casa si deve poter andare a queste. Un link vero, href con https://.",
-    "systema77-site":         ["animagame.io", "cyberboomer.ninja"],
+    "_": "da ogni casa si deve poter andare a queste. Un link vero, href con https://. Una porta verso una casa in allestimento è ATTESA, non pretesa.",
+    "systema77-site":         ["animagame.io", "cyberboomer.ninja", "systema77.film"],
     "animagame-site":         ["systema77.com"],
     "cyberboomer-ninja-site": ["systema77.com", "anima.solar"],
-    "anima-solar-site":       ["systema77.com", "animagame.io", "cyberboomer.ninja"]
+    "anima-solar-site":       ["systema77.com", "animagame.io", "cyberboomer.ninja"],
+    "systema77-film-site":    ["systema77.com", "cyberboomer.ninja"]
   },
 
   "stati": {

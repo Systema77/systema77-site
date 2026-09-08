@@ -25,10 +25,16 @@
  *     cyberboomer-ninja-site/
  *     anima-solar-site/
  *     radio-anima-site/
+ *     systema77-film-site/   ← in allestimento dall'08/09: finché non esiste, il giro lo dice
  *
  * Una casa che non c'è viene DETTA, non fatta finta: «non clonata qui».
  * Zero dipendenze: gira con Node. I guardiani delle case decidono da soli
- * se hanno un browser; il giro ne riporta la parola.
+ * se hanno un browser; il giro ne riporta la parola — ma un guardiano che
+ * esce verde SENZA aver aperto un browser qui è ROSSO (08/09): un verde
+ * cieco è peggio di nessun guardiano.
+ *
+ * Per un giro fatto da una macchina che ha un browser vero, e non dalla
+ * cartella di chi lo lancia: .github/workflows/giro-galassia.yml.
  *
  * ── QUANDO QUALCOSA CAMBIA ───────────────────────────────────────────────
  * Si accende la radio? Si cambia `stati.radio.stato` nel registro, si
@@ -91,12 +97,19 @@ console.log(`\n${G.forte}◉ IL GIRO DELLA GALASSIA${G.fine} ${G.muto}— regist
 titolo('1 · le case');
 const case_ = {};   // dominio → { dir, pagine }
 for (const [dominio, casa] of Object.entries(REG.case)) {
+  if (dominio === '_') continue;
   // Una casa può vivere senza repo: la radio si pubblica per caricamento
   // diretto e la sua sorgente sta fuori da git (vedi il registro). Cercarle
   // una cartella qui vorrebbe dire contare le pagine di qualcun altro.
   if (!casa.repo) { nota(`${dominio} — nessun repo (${casa.voce})`); continue; }
   const dir = join(NIDO, casa.repo);
-  if (!existsSync(dir)) { nota(`${dominio} — ${casa.repo} non clonata qui: saltata`); continue; }
+  if (!existsSync(dir)) {
+    // «non clonata qui» e «non esiste ancora» non sono la stessa frase: la
+    // seconda è uno stato dichiarato nel registro, e si dice con la sua data.
+    if (casa.stato === 'in allestimento') nota(`${dominio} — in allestimento dal ${casa.dal}: ${casa.repo} non esiste ancora (${casa.voce})`);
+    else nota(`${dominio} — ${casa.repo} non clonata qui: saltata`);
+    continue;
+  }
   const pg = pagine(dir);
   case_[dominio] = { dir, pagine: pg, repo: casa.repo };
   if (!pg.length) { nota(`${dominio} — ${casa.repo} è vuota (${casa.voce})`); continue; }
@@ -108,7 +121,13 @@ for (const [dominio, casa] of Object.entries(REG.case)) {
   const r = spawnSync(process.execPath, [g], { cwd: dir, encoding: 'utf8', env: process.env, timeout: 600000 });
   const righe = (r.stdout || '').replace(/\x1b\[[0-9;]*m/g, '').trim().split('\n');
   const ultima = righe.filter(x => x.trim()).slice(-2).join(' · ').trim();
-  if (r.status === 0) ok(`${dominio} — il guardiano è verde`, ultima);
+  // Il verde cieco (misurato l'08/09): senza Playwright i guardiani di due case
+  // stampano «NON COLLAUDATO» ed escono 0, e questo giro li dava per verdi
+  // senza che un browser fosse mai partito. Il giro leggeva solo l'uscita:
+  // adesso legge anche la parola, e un verde senza occhi è rosso.
+  const cieco = righe.some(x => /NON COLLAUDATO/.test(x));
+  if (r.status === 0 && cieco) male(`${dominio} — il guardiano dice verde ma NON ha aperto un browser: verde cieco`, 'i controlli vivi (sbordamento, console) non sono girati: npm i -D playwright nella casa, poi rilancia');
+  else if (r.status === 0) ok(`${dominio} — il guardiano è verde`, ultima);
   else male(`${dominio} — il guardiano è rosso (uscita ${r.status})`, righe.filter(x => /✗/.test(x)).slice(0, 4).join(' · ') || ultima);
 }
 
@@ -122,9 +141,29 @@ for (const [repo, dove] of Object.entries(REG.porte)) {
   for (const p of casa.pagine) for (const u of linkFuori(readFileSync(p, 'utf8'))) {
     try { tutti.add(new URL(u).host.replace(/^www\./, '')); } catch { /* non è un url */ }
   }
-  const mancano = dove.filter(d => !tutti.has(d));
+  // Una porta verso una casa in allestimento non si pretende: non c'è ancora
+  // niente dietro. Ma resta scritta nel registro, così il giorno in cui la casa
+  // va online il giro la pretende da solo — nessuno deve ricordarsene.
+  const attese  = dove.filter(d => REG.case[d]?.stato === 'in allestimento');
+  const pretese = dove.filter(d => !attese.includes(d));
+  const mancano = pretese.filter(d => !tutti.has(d));
   if (mancano.length) male(`da ${repo} non si arriva a ${mancano.join(', ')}`, 'una casa senza porte verso le altre è un vicolo cieco');
-  else ok(`da ${repo} si va a ${dove.join(', ')}`);
+  else ok(`da ${repo} si va a ${pretese.join(', ')}`, attese.length ? `verso ${attese.join(', ')}: porta attesa, la casa è in allestimento` : '');
+}
+
+/* Il rovescio: NESSUNA casa linka una casa in allestimento. Un link verso un
+   dominio non ancora comprato è un vicolo cieco con il nostro nome sopra, e il
+   canone dice «in arrivo» finché non è verificato. */
+for (const [dominio, casa] of Object.entries(REG.case)) {
+  if (dominio === '_' || casa.stato !== 'in allestimento') continue;
+  const colpe = [];
+  for (const [da, c] of Object.entries(case_)) {
+    for (const p of c.pagine) for (const u of linkFuori(readFileSync(p, 'utf8'))) {
+      try { if (new URL(u).host.replace(/^www\./, '') === dominio) { colpe.push(`${da}/${relative(c.dir, p)}`); break; } } catch { /* non è un url */ }
+    }
+  }
+  if (colpe.length) male(`${dominio} è in allestimento, ma qualcuno la linka già`, colpe.slice(0, 6).join(' · '));
+  else ok(`${dominio} è in allestimento e nessuna casa la linka`, 'quando va online: si toglie «stato» dal registro, poi le pagine, poi il giro');
 }
 
 /* ═══ 3 · gli stati, uguali in tutte le case ═══════════════════════════ */

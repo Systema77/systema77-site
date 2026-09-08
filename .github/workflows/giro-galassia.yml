@@ -1,0 +1,74 @@
+# COSA FA — il giro della galassia (strumenti/galassia.mjs) fatto da una macchina con un
+#   browser VERO: clona le case pubbliche una accanto all'altra, installa Playwright dove
+#   i guardiani lo cercano come modulo, e lancia il giro. Rosso = la galassia non dice
+#   una cosa sola, oppure un guardiano non ha potuto guardare.
+# PERCHE ESISTE — l'08/09 il giro lanciato da una cartella senza Playwright dava «verde»
+#   a due case su tre SENZA che un browser fosse mai partito: i guardiani stampavano
+#   «NON COLLAUDATO» ed escivano 0, e il giro leggeva solo l'uscita. Da oggi il giro
+#   segna rosso quel verde cieco; e questo e' il posto dove il verde ha gli occhi.
+# FIN DOVE ARRIVA — legge i repo pubblici e apre le pagine in locale. Nessun segreto,
+#   nessun POST, non tocca i siti in rete: per quello c'e' «Prova della porta»
+#   (anima-console). Misura i sorgenti, non cio' che Pages serve.
+# COSTO — zero: repo pubblico, minuti Actions gratuiti.
+# USO — Actions → «Il giro della galassia» → Run workflow. Parte da solo a ogni push che
+#   tocca il registro, gli strumenti o questo file, e una volta al giorno (06:30 UTC):
+#   una galassia si rompe FRA le case, e una casa che cambia non sa di rompere il centro.
+# — creato da D.R.A.G.O., 2026-09-08
+
+name: Il giro della galassia
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 6 * * *'
+  push:
+    paths:
+      - 'stati-galassia.json'
+      - 'strumenti/**'
+      - '.github/workflows/giro-galassia.yml'
+
+jobs:
+  giro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: case/systema77-site
+
+      - name: 1 · Le altre case, una accanto all'altra
+        # Il giro vuole le case clonate nella stessa cartella: e' l'unica cosa che chiede.
+        # La sesta (systema77-film-site) e' in allestimento nel registro: si prova a clonarla
+        # e, se non esiste ancora, si dice — il giro poi lo ripete con la sua data.
+        run: |
+          set -eu
+          cd case
+          for r in animagame-site cyberboomer-ninja-site anima-solar-site; do
+            git clone --depth 1 --quiet "https://github.com/Systema77/$r.git" "$r"
+            echo "$r → $(git -C "$r" log -1 --format='%h %ci')"
+          done
+          if git clone --depth 1 --quiet https://github.com/Systema77/systema77-film-site.git systema77-film-site 2>/dev/null; then
+            echo "systema77-film-site → clonata: $(git -C systema77-film-site log -1 --format='%h %ci')"
+          else
+            echo "systema77-film-site → non esiste ancora (in allestimento nel registro)"
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 2 · Il browser, dove i guardiani lo cercano
+        # systema77 e animagame importano `playwright` come modulo; .ninja cerca il binario
+        # da solo, anche in ~/.cache/ms-playwright, che e' dove `playwright install` lo mette.
+        # Una installazione, tre guardiani. `--no-save`: nessun package.json entra nei repo.
+        run: |
+          set -eu
+          cd case/systema77-site
+          npm i --no-save --no-audit --no-fund --no-package-lock playwright
+          npx playwright install --with-deps chromium
+          cd ../animagame-site
+          npm i --no-save --no-audit --no-fund --no-package-lock playwright
+
+      - name: 3 · Il giro
+        run: |
+          cd case/systema77-site
+          node strumenti/galassia.mjs
