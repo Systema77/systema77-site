@@ -28,20 +28,28 @@
 </head>
 <body>
 
-<div class="ruota" aria-hidden="false">
-  <div class="ruota-icona"></div>
-  <div class="ruota-big">GIRA<br>IL TELEFONO<span class="m">.</span></div>
-  <div class="ruota-mono">SYSTEMA 77 SI GUARDA ORIZZONTALE.<br>
-  <span class="m">IL RESTO L'ABBIAMO GI&Agrave; RISOLTO NOI.</span></div>
-  <button type="button" class="ruota-esci" id="ruotaEsci">CONTINUA COMUNQUE</button>
-</div>
-
-<nav>
+<!-- La testata a tre porte, come ogni pagina del sito. Fino al 09/09 qui c'era il
+     menu vecchio (Storie · Chill · Progetti), copiato da chill.html il 04/09, prima
+     delle porte: la pagina era fuori dalla mappa. Riservatezza non appartiene a
+     nessuna porta: solo la testata, niente riga delle stanze, come divulgazione. -->
+<header class="testata">
   <a class="marca" href="index.html">&#9673; SYSTEMA 77</a>
-  <a href="storie.html">Storie</a>
-  <a href="chill.html">Chill</a>
-  <a href="progetti.html">Progetti</a>
-</nav>
+  <nav class="porte" aria-label="Le tre porte">
+    <a class="porta soldi" href="servizi.html">
+      <span class="nome">SOLDI</span>
+      <span class="che">per voi</span>
+    </a>
+    <a class="porta ego" href="officina.html">
+      <span class="nome">EGO</span>
+      <span class="che">per me</span>
+    </a>
+    <a class="porta chill" href="chill.html">
+      <span class="nome">CHILL</span>
+      <span class="che">per l’aria</span>
+    </a>
+  </nav>
+  <a class="galassia-su" href="#galassia">la galassia &darr;</a>
+</header>
 
 <div class="annuncio" style="padding-bottom:3rem">
   <div class="dentro">
@@ -125,10 +133,81 @@
   </div>
 </div>
 
+<!-- LA CODA porta la galassia: da qualunque punto del sito si vede la mappa
+     intera, e il colore dice se si resta in casa o si cambia pianeta. -->
 <footer>
-  <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
-  <a href="index.html">home</a>
+  <div class="dentro">
+    <p class="titolo-coda">la galassia</p>
+<div class="galassia" id="galassia">
+  <a class="stella qui" href="servizi.html">
+    <span class="nome">Servizi</span>
+    <span class="che">automazione, produzione per terzi, ricerca e sviluppo</span>
+  </a>
+  <a class="stella qui" href="editrice.html">
+    <span class="nome">Casa editrice</span>
+    <span class="che">produciamo storie: libri, e film quando è la forma giusta</span>
+  </a>
+  <a class="stella qui" href="officina.html">
+    <span class="nome">Officina</span>
+    <span class="che">immagini ferme, immagini in movimento, suono</span>
+  </a>
+  <a class="stella qui" href="progetti.html">
+    <span class="nome">Progetti</span>
+    <span class="che">quello che costruiamo e che non esisteva</span>
+  </a>
+  <a class="stella qui" href="chill.html">
+    <span class="nome">Chill</span>
+    <span class="che">le cose che si tengono accese mentre si fa altro</span>
+  </a>
+  <a class="stella qui" href="divulgazione.html">
+    <span class="nome">Divulgazione</span>
+    <span class="che">quello che abbiamo capito, spiegato a chi non è del mestiere</span>
+  </a>
+  <a class="stella qui" href="aura.html">
+    <span class="nome">AURA</span>
+    <span class="che">il meteo a icone, e una risposta a quello che chiedi</span>
+  </a>
+  <a class="stella verde" href="https://animagame.io" rel="noopener">
+    <span class="nome">Anima Game &#8599;</span>
+    <span class="che">il gioco a invito: serve una carta vera</span>
+    <span class="dove">animagame.io</span>
+  </a>
+  <a class="stella magenta" href="https://cyberboomer.ninja" rel="noopener">
+    <span class="nome">Cyber Boomer &#8599;</span>
+    <span class="che">la divulgazione: la tecnologia spiegata a chi non ci è nato dentro</span>
+    <span class="dove">cyberboomer.ninja</span>
+  </a>
+  <a class="stella ciano" href="radio.html">
+    <span class="nome">Radio Anima &#8599;</span>
+    <span class="che">solo musica nostra, con i diritti in chiaro</span>
+    <span class="dove">systema77.com/radio.html</span>
+  </a>
+</div>
+<p class="galassia-legenda">
+  <span><i class="g"></i>si resta qui</span>
+  <span><i class="a"></i>un altro pianeta della galassia</span>
+</p>
+    <div class="coda-riga">
+      <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
+      <span><button type="button" class="posta" data-u="pierluigidepalo" data-d="gmail.com">scriveteci</button> &middot; <a href="index.html">home</a></span>
+    </div>
+  </div>
 </footer>
+<style>.posta{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.posta.ok{text-decoration:none;opacity:.7}</style>
+<script>
+/* TOPPA POSTA — 2026-09-07, ROGUE. Niente mailto: un clic non apre piu' nessun
+   programma di posta (si aprivano tutti, Tuta compresa). Copia e basta.
+   E l'indirizzo non sta piu' in un href: e' in due pezzi, montati qui. */
+document.querySelectorAll('.posta').forEach(function(b){
+  b.addEventListener('click',function(){
+    var a=b.dataset.u+'@'+b.dataset.d,t=b.textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(a):Promise.reject())
+      .then(function(){b.textContent='copiato: '+a;b.classList.add('ok')})
+      .catch(function(){b.textContent=a;b.classList.add('ok')});
+    setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);
+  });
+});
+</script>
 
 <!-- — scritto da ECHO · su commessa del Direttore · dispatch D.R.A.G.O. · 2026-09-04
      Impianto grafico di chill.html riusato (head, CSS, nav/annuncio/blocco/footer):
@@ -137,20 +216,9 @@
      Direttore, non inventati. L'indirizzo di contatto è quello che il sito già
      pubblica nel piede («scriveteci»): messo il 05/09 da JUDY al posto del
      segnaposto, d'accordo col Direttore. -->
-<script>
-/* LA VIA D'USCITA, ANCHE QUI. La home ce l'aveva dal 17/08, queste no: chi
-   atterrava diretto su questa pagina col blocco rotazione attivo restava fuori
-   dall'intero sito (WCAG 1.3.4). Qui non c'e' il binario da rimisurare, quindi
-   basta togliere il muro. La scelta vale per la sessione, come in home. */
-(function(){
-  var esci=document.getElementById('ruotaEsci');
-  try{ if(sessionStorage.getItem('s77-passa')==='1') document.documentElement.classList.add('passa'); }catch(e){}
-  if(esci) esci.addEventListener('click', function(){
-    document.documentElement.classList.add('passa');
-    try{ sessionStorage.setItem('s77-passa','1'); }catch(e){}
-  });
-})();
-</script>
-
+<!-- Fino al 09/09 qui c'era il muro «GIRA IL TELEFONO» del 03/09 con la sua via
+     d'uscita: la classe .ruota non esiste piu' in stile.css dal 04/09, quindi il
+     blocco usciva come testo nudo in cima alla pagina, e questa era l'unica pagina
+     ad averlo ancora. Tolto, come nelle altre (JUDY, 2026-09-09). -->
 </body>
 </html>
