@@ -352,7 +352,10 @@
   function largaQuanto(testo, famiglia, spaziatura) {
     metro.setAttribute('font-family', famiglia);
     metro.setAttribute('font-size', '100');
-    metro.setAttribute('letter-spacing', String(spaziatura || 0));
+    /* il righello misura a corpo 100, e la riga vera spazia a (spaziatura x corpo):
+       la spaziatura va scalata allo stesso modo, o il timbro esce dal riquadro.
+       Visto a schermo il 09/09 con una frase lunga, non dedotto. */
+    metro.setAttribute('letter-spacing', String((spaziatura || 0) * 100));
     metro.textContent = testo;
     return metro.getComputedTextLength() || testo.length * 55;
   }
