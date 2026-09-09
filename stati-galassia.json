@@ -1,6 +1,6 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
-  "aggiornato": "2026-09-08",
+  "aggiornato": "2026-09-09",
 
   "case": {
     "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
@@ -47,6 +47,22 @@
       "perche": "le due rotte del Worker sono dichiarate e spente",
       "se_in_allestimento": {
         "vietato_testo": "\\baura\\b[^.]{0,40}?\\b(è acces[ao]|funziona già|è online)\\b"
+      }
+    },
+    "magliette": {
+      "stato": "in prova",
+      "dal": "2026-09-07",
+      "pagina": "systema77.com/magliette.html",
+      "perche": "il banco compone la maglietta e mostra la richiesta per intero, ma non incassa: la cassa non c'è ancora. In pagina si dice «in prova · non incassa ancora», e non c'è un carrello. Quando incassa, si cambia QUI prima che in pagina. Le parole della cassa (carrello, paga qui) sono vietate SENZA àncora: il banco sta molte frasi sotto la parola «magliette», e una regola ancorata lì era verde con un carrello in pagina — provato il 09/09. Il giro vede i link fra le case (href assoluti), non quelli di casa: per questo «spenta» vieta anche la parola, che sta nella riga delle stanze di SOLDI.",
+      "se_in_prova": {
+        "vietato_testo": "\\b(carrello|paga qui|pagamento sicuro)\\b|magliett[^.]{0,80}?\\b(acquista|compra)\\b"
+      },
+      "se_accesa": {
+        "vietato_testo": "\\bnon incassa\\b|magliett[^.]{0,80}?\\bin prova\\b"
+      },
+      "se_spenta": {
+        "vietato_link": "magliette\\.html",
+        "vietato_testo": "\\bmagliett"
       }
     },
     "verifiche": {
