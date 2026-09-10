@@ -581,10 +581,28 @@
 </p>
     <div class="coda-riga">
       <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
-      <span><a href="mailto:pierluigidepalo@gmail.com">scriveteci</a> &middot; <a href="index.html">home</a></span>
+      <span><button type="button" class="posta" data-u="pierluigidepalo" data-d="gmail.com">scriveteci</button> &middot; <a href="index.html">home</a></span>
     </div>
   </div>
 </footer>
+<style>.posta{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.posta.ok{text-decoration:none;opacity:.7}</style>
+<script>
+/* TOPPA POSTA — 2026-09-07, ROGUE. Niente mailto: un clic non apre piu' nessun
+   programma di posta (si aprivano tutti, Tuta compresa). Copia e basta.
+   E l'indirizzo non sta piu' in un href: e' in due pezzi, montati qui.
+   Questa pagina e' arrivata dopo la toppa e l'aveva saltata: messa il 09/09 (JUDY).
+   Il bottone d'ordine qui sopra resta un mailto con la richiesta nel corpo: e' il
+   meccanismo di DROP, e cambiarlo e' una decisione, non una toppa. */
+document.querySelectorAll('.posta').forEach(function(b){
+  b.addEventListener('click',function(){
+    var a=b.dataset.u+'@'+b.dataset.d,t=b.textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(a):Promise.reject())
+      .then(function(){b.textContent='copiato: '+a;b.classList.add('ok')})
+      .catch(function(){b.textContent=a;b.classList.add('ok')});
+    setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);
+  });
+});
+</script>
 <script src="s77.js" defer></script>
 </body>
 </html>
