@@ -25,7 +25,7 @@
  *     cyberboomer-ninja-site/
  *     anima-solar-site/
  *     radio-anima-site/
- *     systema77-film-site/   ← in allestimento dall'08/09: finché non esiste, il giro lo dice
+ *     systema77-studio-site/ ← in allestimento dall'08/09: finché non esiste, il giro lo dice
  *
  * Una casa che non c'è viene DETTA, non fatta finta: «non clonata qui».
  * Zero dipendenze: gira con Node. I guardiani delle case decidono da soli

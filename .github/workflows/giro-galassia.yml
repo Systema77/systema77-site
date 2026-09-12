@@ -37,7 +37,7 @@ jobs:
 
       - name: 1 · Le altre case, una accanto all'altra
         # Il giro vuole le case clonate nella stessa cartella: e' l'unica cosa che chiede.
-        # La sesta (systema77-film-site) e' in allestimento nel registro: si prova a clonarla
+        # La sesta (systema77-studio-site) e' in allestimento nel registro: si prova a clonarla
         # e, se non esiste ancora, si dice — il giro poi lo ripete con la sua data.
         run: |
           set -eu
@@ -46,10 +46,10 @@ jobs:
             git clone --depth 1 --quiet "https://github.com/Systema77/$r.git" "$r"
             echo "$r → $(git -C "$r" log -1 --format='%h %ci')"
           done
-          if git clone --depth 1 --quiet https://github.com/Systema77/systema77-film-site.git systema77-film-site 2>/dev/null; then
-            echo "systema77-film-site → clonata: $(git -C systema77-film-site log -1 --format='%h %ci')"
+          if git clone --depth 1 --quiet https://github.com/Systema77/systema77-studio-site.git systema77-studio-site 2>/dev/null; then
+            echo "systema77-studio-site → clonata: $(git -C systema77-studio-site log -1 --format='%h %ci')"
           else
-            echo "systema77-film-site → non esiste ancora (in allestimento nel registro)"
+            echo "systema77-studio-site → non esiste ancora (in allestimento nel registro)"
           fi
 
       - uses: actions/setup-node@v4
