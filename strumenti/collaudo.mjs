@@ -212,12 +212,20 @@ else {
 titolo('7 · scivolamento laterale ed errori in console');
 const LARGHEZZE = [320, 390, 768, 1024, 1280, 1600];
 let chromium = null;
+/* Il 13/09 questo guardiano diceva «✓ non ha trovato niente» anche quando la sezione 7
+   non era girata: la riga finale prometteva una salute che nessuno aveva misurato. Un
+   controllo saltato, a chi scorre cercando il rosso, somiglia troppo a un controllo
+   passato. Ora la riga finale lo dice. Il codice d'uscita NON cambia apposta: resta 0,
+   così galassia.mjs continua a riconoscere il caso e a chiamarlo «verde cieco» con la
+   sua diagnosi, che è più precisa di un'uscita 1. */
+let cieco = false;
 try { ({ chromium } = await import('playwright')); } catch { /* non installato */ }
 
 if (!chromium) {
   console.log(`  ${G.giallo}NON COLLAUDATO${G.fine} — Playwright non c'è in questo ambiente.`);
   nota('per farlo: npm i -D playwright  ·  e poi rilancia');
   nota('questo collaudo non finge di aver guardato: dice che non ha guardato');
+  cieco = true;
 } else {
   const eseguibile = process.env.PLAYWRIGHT_CHROMIUM || '/opt/pw-browsers/chromium';
   const b = await chromium.launch(existsSync(eseguibile) ? { executablePath: eseguibile } : {});
@@ -255,5 +263,12 @@ if (guai) {
   console.log(`${G.rosso}${G.forte}✗ ${guai} ${c} prima di spingere.${G.fine}\n`);
   process.exit(1);
 }
-console.log(`${G.verde}${G.forte}✓ Il guardiano non ha trovato niente.${G.fine}`);
-console.log(`${G.muto}  Restano le promesse della sezione 6: quelle le apre una persona.${G.fine}\n`);
+if (cieco) {
+  console.log(`${G.giallo}${G.forte}◐ VERDE CIECO — niente da sistemare in ciò che ho guardato.${G.fine}`);
+  console.log(`${G.muto}  Ma la sezione 7 NON è girata: sbordamento e console non sono stati misurati.${G.fine}`);
+  console.log(`${G.muto}  Non è un lasciapassare per spingere. Il giro della galassia in CI installa${G.fine}`);
+  console.log(`${G.muto}  Playwright e guarda davvero; qui no. E galassia.mjs segna rosso questo caso.${G.fine}\n`);
+} else {
+  console.log(`${G.verde}${G.forte}✓ Il guardiano non ha trovato niente.${G.fine}`);
+  console.log(`${G.muto}  Restano le promesse della sezione 6: quelle le apre una persona.${G.fine}\n`);
+}
