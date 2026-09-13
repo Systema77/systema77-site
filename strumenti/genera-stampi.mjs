@@ -15,13 +15,25 @@
 //    scritto da SUONO il 10/08): questo repo e' pubblico e git non dimentica.
 //    Vivono su Cloudflare Pages. Pubblicarli e' un atto del Direttore.
 //
+// ⚠️ CORREZIONE 2026-09-13, e va letta: la prima versione prendeva `--pollici` e
+//    `--dpi` e calcolava i pixel. L'API di Printful NON ragiona cosi': da' una TELA
+//    IN PIXEL FISSI. Misurata quel giorno su tutte e tre le magliette candidate
+//    (Bella+Canvas 3001, Stanley/Stella STTU169, Gildan 64000): 1800x2400, uguale.
+//    E quella tela e' VERTICALE (3:4) mentre il riquadro del disegno in pagina e'
+//    ORIZZONTALE (218x176). Il disegno non riempie il file: ci va POSIZIONATO dentro.
+//    Con la misura in pollici sarebbe uscito deformato, e si sarebbe visto solo su
+//    una maglietta vera addosso a qualcuno.
+//
+// I colori della pagina, mappati sui nomi veri di Printful (prodotto 71,
+// misurati il 13/09: 84 colori, i nostri quattro ci sono tutti):
+//   nero → Black · bianco → White · grigio → Dark Grey · navy → Navy
+//
 // Uso:
 //   node strumenti/genera-stampi.mjs
-//   node strumenti/genera-stampi.mjs --frase "ALTRA FRASE" --pollici 12 --dpi 300
+//   node strumenti/genera-stampi.mjs --frase "ALTRA FRASE" --largo 0.85 --alto-da 0.15
 //
 // — creato da DROP, 2026-09-13
 
-import { chromium } from 'playwright';
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -37,12 +49,17 @@ const arg = (nome, pre) => {
   return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : pre;
 };
 
-// ⚠️ NON CONFERMATO CONTRO IL CATALOGO PRINTFUL. L'area di stampa vera di una
-// maglietta si CHIEDE all'API (`/products/<id>`), non si ricorda: da una
-// sessione remota api.printful.com risponde 403, quindi qui c'e' un default
-// generoso e dichiarato, non una misura. Dal Mac si chiede e si rigenera.
-const POLLICI = Number(arg('pollici', '12'));
-const DPI = Number(arg('dpi', '300'));
+// LA TELA — misurata, non ricordata: `/mockup-generator/printfiles/<id>` il 13/09.
+const TELA = { largo: 1800, alto: 2400 };
+
+// I DUE NUMERI CHE NON SONO UNA MISURA, e per questo si dichiarano a ogni corsa.
+// Quanto e' largo il disegno sul petto e quanto scende dal collo NON si ricava dai
+// dati: l'anteprima e' un DISEGNO di maglietta, non un modello in scala di una
+// Bella+Canvas 3001, e l'API da' la tela ma non dove cade sul capo indossato.
+// 📜 Un numero che non si e' misurato non si scrive come se lo fosse.
+// La conferma vera e' un mockup Printful, e va fatta prima di qualunque ordine.
+const LARGO = Number(arg('largo', '0.85'));      // frazione della larghezza di stampa
+const ALTO_DA = Number(arg('alto-da', '0.15'));  // dove cade il bordo alto del disegno
 
 // ── l'area di stampa, letta DALLA PAGINA e mai ricordata ─────────────────────
 // Se un giorno qualcuno sposta il riquadro nella pagina, questo la segue. Se
@@ -63,10 +80,57 @@ const sorgente = readFileSync(PAGINA, 'utf8');
 const AREA = areaDallaPagina(sorgente);
 const VIEWBOX = `${AREA.x - AREA.largo / 2} ${AREA.cima} ${AREA.largo} ${AREA.alto}`;
 
-const LARGO_PX = Math.round(POLLICI * DPI);
-const ALTO_PX = Math.round(LARGO_PX * (AREA.alto / AREA.largo));
+// Il rapporto del disegno non si tocca MAI: si sceglie la larghezza, l'altezza segue.
+function collocazione(tela, area, largo, altoDa) {
+  const w = Math.round(tela.largo * largo);
+  const h = Math.round(w * (area.alto / area.largo));
+  return { w, h, x: Math.round((tela.largo - w) / 2), y: Math.round(tela.alto * altoDa) };
+}
+const POSA = collocazione(TELA, AREA, LARGO, ALTO_DA);
+
+if (POSA.y + POSA.h > TELA.alto || POSA.w > TELA.largo) {
+  console.error('✗ Con questi valori il disegno esce dalla tela di stampa. Non scrivo niente.');
+  console.error(`    disegno ${POSA.w}x${POSA.h} a (${POSA.x},${POSA.y}) · tela ${TELA.largo}x${TELA.alto}`);
+  process.exit(1);
+}
+
+// ── il banco: solo geometria, zero rete, zero browser ────────────────────────
+// Nasce perche' da una sessione remota i caratteri non arrivano e l'attrezzo
+// rifiuta (giustamente): senza questo, di questa riscrittura non potrei provare
+// NIENTE da qui. La geometria pero' e' aritmetica, e l'aritmetica si prova ovunque.
+if (process.argv.includes('--prova')) {
+  const casi = [];
+  const q = collocazione(TELA, AREA, 0.85, 0.15);
+  casi.push(['il disegno sta dentro la tela', q.x >= 0 && q.y >= 0 &&
+             q.x + q.w <= TELA.largo && q.y + q.h <= TELA.alto]);
+  casi.push(['il rapporto del disegno non cambia',
+             Math.abs(q.w / q.h - AREA.largo / AREA.alto) < 0.01]);
+  casi.push(['il disegno e\' centrato in orizzontale',
+             Math.abs(q.x - (TELA.largo - q.w - q.x)) <= 1]);
+  const largo = collocazione(TELA, AREA, 1, 0.15);
+  casi.push(['a larghezza piena tocca i bordi e non li supera',
+             largo.w === TELA.largo && largo.x === 0]);
+  const basso = collocazione(TELA, AREA, 0.85, 0.95);
+  casi.push(['spinto in fondo ESCE — e il guardrail lo deve vedere',
+             basso.y + basso.h > TELA.alto]);
+  for (const [nome, ok] of casi) console.log(`  ${ok ? '✓' : '✗'} ${nome}`);
+  const rotti = casi.filter(([, ok]) => !ok);
+  console.log(rotti.length ? `\n✗ ${rotti.length} rotti` : `\n✓ ${casi.length} casi, tutti verdi`);
+  process.exit(rotti.length ? 1 : 0);
+}
 
 // ── il giro ──────────────────────────────────────────────────────────────────
+// L'import e' DINAMICO e sta qui, non in cima: cosi' `--prova` gira anche dove
+// Playwright non c'e'. Un banco che non parte senza il browser non e' un banco.
+// (Stessa forma di strumenti/collaudo.mjs, che lo cerca e dice se non lo trova.)
+let chromium;
+try { ({ chromium } = await import('playwright')); }
+catch {
+  console.error('✗ Playwright non e\' installato: non posso aprire la pagina.');
+  console.error('  per farlo: npm i -D playwright  ·  e poi rilancia');
+  process.exit(1);
+}
+
 const browser = await chromium.launch();
 const pagina = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const errori = [];
@@ -151,8 +215,10 @@ mkdirSync(FUORI, { recursive: true });
 console.log(`\n◉ GLI STAMPI → FILE DI STAMPA`);
 console.log(`  frase:    «${FRASE}»${arg('frase', null) ? '' : '  (quella della pagina)'}`);
 console.log(`  riquadro: ${VIEWBOX}  (letto dalla pagina, non ricordato)`);
-console.log(`  misura:   ${LARGO_PX}×${ALTO_PX} px — ${POLLICI}″ a ${DPI} dpi`);
-console.log(`  ⚠ la misura NON e' confermata contro il catalogo Printful: si chiede all'API, dal Mac.\n`);
+console.log(`  tela:     ${TELA.largo}×${TELA.alto} px  ✓ misurata dall'API Printful il 13/09`);
+console.log(`  disegno:  ${POSA.w}×${POSA.h} px a (${POSA.x},${POSA.y})  — largo ${LARGO}, alto-da ${ALTO_DA}`);
+console.log(`  ⚠ larghezza e altezza del disegno NON sono una misura: dai dati non si ricavano.`);
+console.log(`    Li conferma un mockup Printful, e va fatto prima di qualunque ordine.\n`);
 
 await pagina.fill('#frase', FRASE);
 
@@ -170,14 +236,18 @@ for (const stampo of STAMPI) {
     }
 
     // SVG autonomo: solo il disegno, fondo trasparente, nessuna maglietta.
+    // La tela e' quella di Printful; il disegno ci sta DENTRO, in un <svg> annidato
+    // che col suo viewBox + preserveAspectRatio non lo deforma mai.
     const svg =
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEWBOX}" ` +
-      `width="${LARGO_PX}" height="${ALTO_PX}">${disegno}</svg>`;
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${TELA.largo}" height="${TELA.alto}" ` +
+      `viewBox="0 0 ${TELA.largo} ${TELA.alto}">` +
+      `<svg x="${POSA.x}" y="${POSA.y}" width="${POSA.w}" height="${POSA.h}" ` +
+      `viewBox="${VIEWBOX}" preserveAspectRatio="xMidYMid meet">${disegno}</svg></svg>`;
 
     const nome = `stampo-${stampo.id}-${colore.id}`;
     writeFileSync(join(FUORI, nome + '.svg'), svg);
 
-    const tela = await browser.newPage({ viewport: { width: LARGO_PX, height: ALTO_PX } });
+    const tela = await browser.newPage({ viewport: { width: TELA.largo, height: TELA.alto } });
     await tela.setContent(
       `<style>html,body{margin:0;background:transparent}svg{display:block}</style>` +
       `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Share+Tech+Mono&display=swap">` +
