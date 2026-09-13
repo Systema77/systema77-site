@@ -59,10 +59,14 @@
       <div class="kick">radio &middot; <b>trasmettiamo dal buio</b></div>
       <h1 class="titolone">RADIO<span class="c" style="color:#38E08A">.</span></h1>
 
-      <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json):
-           il player è stato misurato dal runner, ma nessuno l'ha ancora
-           sentita suonare. In pagina si dice «in prova», mai «accesa». -->
-      <p class="stato-radio"><span class="spia"></span> in prova &middot; onda 01</p>
+      <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json).
+           ⚠️ Qui c'era scritto «nessuno l'ha ancora sentita suonare»: dal
+           2026-09-13 è FALSO — il Direttore l'ha aperta e ha detto «super», e
+           il runner ha misurato il suono tre volte (12,0 s avanzati, 289.152
+           byte decodificati, RMS 0,131-0,140). Lo stato resta «in prova»
+           perché lo decide il registro, non io: si cambia là, poi qui.
+           L'ONDA NON SI SCRIVE PIÙ A MANO: vedi lo script in fondo. -->
+      <p class="stato-radio"><span class="spia"></span> <span id="stato-onda">in prova</span></p>
 
       <p class="occhiello">Musica nostra. Nessun campione di nessuno.<br>
       Va in onda alle <b>20.26</b>, ora di Roma. Fuori orario si sente la replica.</p>
@@ -72,9 +76,11 @@
 
       <div class="ascolto">
         <button class="bottone pieno verde" id="tasto" type="button">&#9654;&ensp;Ascolta l'onda</button>
+        <!-- Questo src è il RIPIEGO, non la verità: lo script qui sotto lo
+             sostituisce con l'onda che la radio sta davvero trasmettendo. -->
         <audio id="onda" preload="none"
                src="https://radio-anima.pages.dev/audio/onda-01-diretta.mp3"></audio>
-        <p class="riga-mono" id="esito">onda 01 &middot; pronta</p>
+        <p class="riga-mono" id="esito">pronta</p>
       </div>
 
       <p class="occhiello piccolo">Il player intero, con l'orario e la replica, sta su
@@ -109,6 +115,30 @@
    E se il file non risponde la pagina LO DICE: non finge un'onda che non c'è. */
 (function(){
   var t=document.getElementById('tasto'), a=document.getElementById('onda'), e=document.getElementById('esito');
+
+  /* LA VETRINA SEGUE LA RADIO, non la fotografa.
+     Il 13/09 il Direttore, in macchina, sentiva UN pezzo solo da qui mentre dal
+     laptop ne sentiva di nuovi: l'indirizzo dell'onda era scritto a mano in
+     questa pagina e stava fermo a onda 01, mentre la radio trasmetteva la 02
+     («musica di casa»: DROP e SUONO). Una copia dell'indirizzo e' una copia
+     che invecchia, e questa aveva invecchiato di una trasmissione intera.
+     Qui si chiede a onda.json, che e' la verita' della radio.
+     Se non risponde, o se ha una forma che questa pagina non sa leggere,
+     resta il file scritto nel tag e LO SI DICE: si degrada, non si finge. */
+  fetch('https://radio-anima.pages.dev/onda.json', {cache:'no-cache'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(o){
+      var d = o && o.diretta;
+      if(!d || !d.file) throw 0;
+      a.src = 'https://radio-anima.pages.dev/' + (o.base || '') + d.file;
+      var nome = (o.titolo || '').replace(/^[^\u00b7]*\u00b7\s*/, '') || ('onda ' + (o.onda || ''));
+      document.getElementById('stato-onda').textContent = 'in prova \u00b7 ' + nome;
+      e.textContent = nome + ' \u00b7 pronta';
+    })
+    .catch(function(){
+      e.textContent = 'non ho potuto chiedere alla radio quale onda \u00e8 in corso: senti l\u2019ultima che conosco';
+    });
+
   t.addEventListener('click', function(){
     a.classList.add('visibile'); a.controls=true;
     if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){
