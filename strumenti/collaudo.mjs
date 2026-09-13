@@ -23,10 +23,17 @@
  * lanci il comando — persona o agente.
  *
  * ── COME È FATTO ─────────────────────────────────────────────────────────
- * Nessuna dipendenza per la parte statica: gira con Node e basta.
- * La parte col browser (scivolamento laterale, errori in console) usa
- * Playwright SE c'è; se non c'è, il collaudo NON finge di averla fatta —
- * lo dice e passa oltre. È la stessa regola che vale per le pagine.
+ * Nessuna dipendenza, per nessuna delle due parti: gira con Node e basta.
+ * La parte col browser (scivolamento laterale, errori in console) CERCA un
+ * browser già installato — Chrome, Brave, Chromium, o quello che indichi con
+ * COLLAUDO_BROWSER — e lo pilota via CDP. Se non ne trova nessuno, il collaudo
+ * NON finge di averla fatta: lo dice e passa oltre. È la stessa regola che
+ * vale per le pagine.
+ *   ⚠️ Fino al 13/09 qui c'era scritto «usa Playwright SE c'è», e quel «se»
+ *   non si è mai avverato: chiedeva un PACCHETTO npm, e questa casa non ha un
+ *   package.json. La sezione col browser non era mai girata su una macchina
+ *   di persona — solo in CI, che però parte al cron o su una modifica a
+ *   strumenti/, non quando cambia una pagina.
  *
  * ── LA REGOLA CHE NON PUÒ CONTROLLARE ────────────────────────────────────
  * L'ultima sezione elenca ogni punto in cui il sito dichiara che qualcosa
@@ -40,6 +47,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
 
 const RADICE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -211,7 +219,56 @@ else {
 /* ═══ 7 · IL BROWSER, SE C'È ════════════════════════════════════════════ */
 titolo('7 · scivolamento laterale ed errori in console');
 const LARGHEZZE = [320, 390, 768, 1024, 1280, 1600];
-let chromium = null;
+
+/* IL BROWSER SI CERCA, NON SI INSTALLA — misurato il 13/09.
+   Fino a oggi qui c'era `await import('playwright')`: si chiedeva un PACCHETTO npm,
+   e in questa casa nessun repo ha un package.json né node_modules. Quell'import non
+   poteva riuscire — né in una sessione, né sul Mac — quindi questa sezione non è mai
+   girata su una macchina di persona. In CI sì (giro-galassia.yml installa con
+   --no-save), ma quel giro parte al cron delle 06:30 o su una modifica a strumenti/:
+   una PAGINA cambiata e spinta non faceva scattare niente, e il CLAUDE.md di casa
+   intanto diceva «prima di spingere, lancia il guardiano».
+   Ora si cerca un browser GIÀ INSTALLATO e lo si pilota via CDP, che Node ha di serie
+   dalla 22. Non è un meccanismo nuovo: è quello di cyberboomer.ninja, dove misura da
+   giorni. Trapiantato, non inventato. */
+const dentro = (dir, coda) => {
+  try { return readdirSync(dir).filter((n) => n.startsWith('chromium')).sort().reverse().map((n) => join(dir, n, coda)); }
+  catch { return []; }
+};
+const CANDIDATI_BROWSER = [
+  process.env.COLLAUDO_BROWSER,
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+  '/Applications/Chromium.app/Contents/MacOS/Chromium',
+  '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+  ...dentro(process.env.PLAYWRIGHT_BROWSERS_PATH ?? '', 'chrome-linux/chrome'),
+  ...dentro('/opt/pw-browsers', 'chrome-linux/chrome'),
+  ...dentro(join(process.env.HOME ?? '', '.cache/ms-playwright'), 'chrome-linux/chrome'),
+].filter(Boolean);
+const BROWSER = CANDIDATI_BROWSER.find(existsSync);
+// Come root (contenitori, CI) Chromium rifiuta di partire senza --no-sandbox: non è una
+// scelta di sicurezza nostra, è la condizione per misurare qualcosa in quelle stanze.
+const FLAG_ROOT = process.getuid?.() === 0 ? ['--no-sandbox'] : [];
+const dormi = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function cdp(ws) {
+  let id = 0; const attesa = new Map(); const eventi = [];
+  const sock = new WebSocket(ws);
+  sock.addEventListener('message', (ev) => {
+    const m = JSON.parse(ev.data);
+    if (m.id && attesa.has(m.id)) { attesa.get(m.id)(m.result ?? {}); attesa.delete(m.id); }
+    else if (m.method) eventi.push(m);
+  });
+  const pronto = new Promise((r) => sock.addEventListener('open', r));
+  return {
+    pronto, eventi,
+    manda: (method, params = {}) => new Promise((r) => {
+      const n = ++id; attesa.set(n, r); sock.send(JSON.stringify({ id: n, method, params }));
+    }),
+    chiudi: () => sock.close(),
+  };
+}
+
 /* Il 13/09 questo guardiano diceva «✓ non ha trovato niente» anche quando la sezione 7
    non era girata: la riga finale prometteva una salute che nessuno aveva misurato. Un
    controllo saltato, a chi scorre cercando il rosso, somiglia troppo a un controllo
@@ -219,41 +276,67 @@ let chromium = null;
    così galassia.mjs continua a riconoscere il caso e a chiamarlo «verde cieco» con la
    sua diagnosi, che è più precisa di un'uscita 1. */
 let cieco = false;
-try { ({ chromium } = await import('playwright')); } catch { /* non installato */ }
 
-if (!chromium) {
-  console.log(`  ${G.giallo}NON COLLAUDATO${G.fine} — Playwright non c'è in questo ambiente.`);
-  nota('per farlo: npm i -D playwright  ·  e poi rilancia');
+if (!BROWSER) {
+  console.log(`  ${G.giallo}NON COLLAUDATO${G.fine} — nessun browser trovato: cercato in ${CANDIDATI_BROWSER.length} posti (Mac, Linux, cache di Playwright).`);
+  nota('indica il tuo: COLLAUDO_BROWSER=/percorso/del/browser  ·  e poi rilancia');
   nota('questo collaudo non finge di aver guardato: dice che non ha guardato');
   cieco = true;
 } else {
-  const eseguibile = process.env.PLAYWRIGHT_CHROMIUM || '/opt/pw-browsers/chromium';
-  const b = await chromium.launch(existsSync(eseguibile) ? { executablePath: eseguibile } : {});
-  for (const p of pagine) {
-    const male_a = [];
-    for (const L of LARGHEZZE) {
-      const ctx = await b.newContext({ viewport: { width: L, height: 900 } });
-      // Fuori non si esce: il collaudo misura le pagine, non la rete.
-      await ctx.route('**', (r) => r.request().url().startsWith('file:') ? r.continue() : r.abort());
-      const pg = await ctx.newPage();
-      const errori = [];
-      pg.on('pageerror', (e) => errori.push(e.message));
-      pg.on('console', (m) => {
-        if (m.type() === 'error' && !/Failed to load resource|ERR_/.test(m.text())) errori.push(m.text());
-      });
-      await pg.goto('file://' + p, { waitUntil: 'load' });
-      await pg.waitForTimeout(400);
-      const misura = await pg.evaluate(() => ({
-        largo: document.documentElement.scrollWidth, vista: window.innerWidth,
-      }));
-      if (misura.largo > misura.vista + 1) male_a.push(`${L}px scivola (${misura.largo}>${misura.vista})`);
-      if (errori.length) male_a.push(`${L}px ${errori[0].slice(0, 50)}`);
-      await ctx.close();
-    }
-    if (male_a.length) male(`${relativo(p)} — ${male_a.join(' · ')}`);
-    else ok(`${relativo(p)} — pulita a ${LARGHEZZE.join('/')}px`);
+  const portaCdp = 9000 + Math.floor(Math.random() * 900);
+  const proc = spawn(BROWSER, ['--headless=new', `--remote-debugging-port=${portaCdp}`,
+    `--user-data-dir=/tmp/collaudo-${portaCdp}`, '--no-first-run', '--no-default-browser-check',
+    '--disable-gpu', '--hide-scrollbars', ...FLAG_ROOT], { stdio: 'ignore' });
+
+  let vers = null;
+  for (let i = 0; i < 40 && !vers; i++) {
+    await dormi(250);
+    try { vers = await (await fetch(`http://127.0.0.1:${portaCdp}/json/version`)).json(); } catch { /* non ancora in piedi */ }
   }
-  await b.close();
+  if (!vers) {
+    male(`il browser non si è avviato — ${BROWSER}`);
+  } else {
+    const b = cdp(vers.webSocketDebuggerUrl); await b.pronto;
+    for (const p of pagine) {
+      const male_a = [];
+      for (const L of LARGHEZZE) {
+        const { targetId } = await b.manda('Target.createTarget', { url: 'about:blank' });
+        const lista = await (await fetch(`http://127.0.0.1:${portaCdp}/json/list`)).json();
+        const pg = cdp(lista.find((x) => x.id === targetId).webSocketDebuggerUrl); await pg.pronto;
+        await pg.manda('Runtime.enable'); await pg.manda('Log.enable'); await pg.manda('Network.enable');
+        // Fuori non si esce: il collaudo misura le pagine, non la rete.
+        await pg.manda('Network.setBlockedURLs', { urls: ['http://*', 'https://*', 'ws://*', 'wss://*'] });
+        await pg.manda('Emulation.setDeviceMetricsOverride', { width: L, height: 900, deviceScaleFactor: 1, mobile: L < 500 });
+        await pg.manda('Page.navigate', { url: 'file://' + p });
+        await dormi(400);
+        const { result } = await pg.manda('Runtime.evaluate', {
+          expression: '({ largo: document.documentElement.scrollWidth, vista: window.innerWidth })',
+          returnByValue: true,
+        });
+        const misura = result.value;
+        // La larghezza chiesta dev'essere quella misurata. Senza <meta name="viewport"> il
+        // browser in modo mobile ne inventa una più larga, e il controllo a 320px misurerebbe
+        // una finestra che non esiste: un verde che non ha guardato niente. Provato il 13/09
+        // su una pagina-esca senza quel meta — diceva 1280 mentre le chiedevo 320.
+        if (misura.vista !== L) male_a.push(`${L}px non applicata (la finestra è ${misura.vista}px): manca <meta name="viewport">?`);
+        if (misura.largo > misura.vista + 1) male_a.push(`${L}px scivola (${misura.largo}>${misura.vista})`);
+        const errori = pg.eventi.flatMap((e) => {
+          if (e.method === 'Runtime.exceptionThrown') return [e.params.exceptionDetails?.text ?? '?'];
+          if (e.method === 'Runtime.consoleAPICalled' && e.params.type === 'error')
+            return [e.params.args?.map((a) => a.value ?? a.description).join(' ') ?? '?'];
+          if (e.method === 'Log.entryAdded' && e.params.entry.level === 'error') return [e.params.entry.text];
+          return [];
+        }).filter((t) => !/Failed to load resource|ERR_/.test(String(t)));
+        if (errori.length) male_a.push(`${L}px ${String(errori[0]).slice(0, 50)}`);
+        pg.chiudi();
+        await b.manda('Target.closeTarget', { targetId });
+      }
+      if (male_a.length) male(`${relativo(p)} — ${male_a.join(' · ')}`);
+      else ok(`${relativo(p)} — pulita a ${LARGHEZZE.join('/')}px`);
+    }
+    b.chiudi();
+  }
+  proc.kill();
 }
 
 /* ═══ il verdetto ═══════════════════════════════════════════════════════ */
@@ -266,8 +349,9 @@ if (guai) {
 if (cieco) {
   console.log(`${G.giallo}${G.forte}◐ VERDE CIECO — niente da sistemare in ciò che ho guardato.${G.fine}`);
   console.log(`${G.muto}  Ma la sezione 7 NON è girata: sbordamento e console non sono stati misurati.${G.fine}`);
-  console.log(`${G.muto}  Non è un lasciapassare per spingere. Il giro della galassia in CI installa${G.fine}`);
-  console.log(`${G.muto}  Playwright e guarda davvero; qui no. E galassia.mjs segna rosso questo caso.${G.fine}\n`);
+  console.log(`${G.muto}  Non è un lasciapassare per spingere. Serve un browser — Chrome, Brave o${G.fine}`);
+  console.log(`${G.muto}  Chromium vanno bene — e si indica con COLLAUDO_BROWSER=/percorso.${G.fine}`);
+  console.log(`${G.muto}  In CI il giro ne installa uno. E galassia.mjs segna rosso questo caso.${G.fine}\n`);
 } else {
   console.log(`${G.verde}${G.forte}✓ Il guardiano non ha trovato niente.${G.fine}`);
   console.log(`${G.muto}  Restano le promesse della sezione 6: quelle le apre una persona.${G.fine}\n`);
