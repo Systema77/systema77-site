@@ -325,47 +325,20 @@ const SPOTS=[
   {id:'trettu',btn:'Punta Trettu · Sardegna',sub:'Kite spot Punta Trettu · San Giovanni Suergiu (SU) · 39.113° N, 8.437° E',
     lat:39.113,lon:8.437,mar:{lat:39.04,lon:8.47,label:'Golfo di Palmas'}}
 ];
-const HOURLY='temperature_2m,apparent_temperature,relative_humidity_2m,pressure_msl,precipitation,precipitation_probability,cloud_cover,wind_speed_10m,wind_gusts_10m,wind_direction_10m';
-/* ⚠️ AVVISO DI JUDY, 04/09 — LEGGERE PRIMA DI PUBBLICARE PIU' LARGO.
-   La chiave qui sotto e' in chiaro: in un repo pubblico, e servita dentro una
-   pagina pubblica. Chiunque apra il sorgente la legge, e la puo' usare — le
-   chiamate finiscono sull'abbonamento del Direttore.
-   Non e' un errore di chi l'ha scritta: una pagina statica che chiama l'API
-   dal browser NON PUO' tenere segreta una chiave, mai. Le uscite sono due:
-     a) limitare la chiave per dominio dal pannello di Open-Meteo, se lo
-        consente — la chiave resta visibile ma serve solo da systema77.com;
-     b) far passare le chiamate da un worker nostro che tiene la chiave dalla
-        sua parte, e la pagina chiama il worker (impianto di SQUELCH).
-   Finche' nessuna delle due e' fatta, questa e' una spesa aperta a chiunque.
-
-   ═══ LA CHIAVE DEL PIANO A PAGAMENTO — UNICA RIGA DA CAMBIARE ═══════════════
-   Incolla fra gli apici la chiave ricevuta da Open-Meteo dopo l'abbonamento.
-
-   VUOTA  → server gratuito. USO INTERNO SOLTANTO: il piano gratuito vieta
-            l'uso commerciale, quindi con la chiave vuota questa pagina
-            NON si copia su systema77.com.
-   PIENA  → server a pagamento, licenza commerciale inclusa: si pubblica.
-
-   Verificato il 2026-08-19: senza chiave i due server a pagamento rispondono
-   «API key required», quindi esistono e aspettano solo lei.
-
-   ⚠️ 2026-09-06 — LA RIGA E' STATA SVUOTATA, E NON RIMETTERCI QUELLA VECCHIA.
-   La chiave che stava qui e' rimasta in chiaro dal 19/08 al 06/09: diciotto
-   giorni in un repo pubblico. Toglierla da qui chiude la spesa aperta DA
-   QUESTA PAGINA, ma NON la revoca: resta nella cronologia di git e in ogni
-   copia gia' scaricata. La revoca si chiede a Open-Meteo, ed e' l'unica cosa
-   che chiude davvero. Finche' non c'e' il worker dell'uscita (b), qui dentro
-   una chiave nuova sarebbe bruciata il giorno stesso.                    */
-const APIKEY='';
-
-const _SRV    = APIKEY ? 'https://customer-api.open-meteo.com'        : 'https://api.open-meteo.com';
-const _SRVMAR = APIKEY ? 'https://customer-marine-api.open-meteo.com' : 'https://marine-api.open-meteo.com';
-const _CHIAVE = APIKEY ? '&apikey='+APIKEY : '';
-
-const urlFc=s=>_SRV+'/v1/forecast?latitude='+s.lat+'&longitude='+s.lon+
-  '&hourly='+HOURLY+'&models=ecmwf_ifs025,gfs_seamless,icon_seamless&forecast_days=7&timezone=Europe%2FRome&wind_speed_unit=kn'+_CHIAVE;
-const urlMar=s=>_SRVMAR+'/v1/marine?latitude='+s.mar.lat+'&longitude='+s.mar.lon+
-  '&hourly=wave_height,wave_direction,wave_period&forecast_days=7&timezone=Europe%2FRome&cell_selection=sea'+_CHIAVE;
+/* ═══ I DATI ARRIVANO DAL WORKER DI AURA, NON PIU' DA OPEN-METEO ═══════════════
+   2026-09-13 — questa pagina non chiama piu' Open-Meteo dal browser. Chiama il
+   Worker `aura` (api.cyberboomer.io), che gira a Open-Meteo la STESSA richiesta
+   di prima con la chiave del piano a pagamento tenuta dalla sua parte: una
+   pagina servita al browser non puo' tenere un segreto, e dal 06/09 la
+   costante vuota la faceva cadere sui server gratuiti, che vietano l'uso
+   promozionale. La risposta e' identica campo per campo (misurato il 13/09),
+   quindi il resto della pagina non cambia.
+   ⛔ NON rimettere qui una chiave, e NON tornare a `api.open-meteo.com`.
+   Il Worker accetta solo le quattro localita' di SPOTS: una localita' nuova va
+   aggiunta anche in AURA/worker-aura/src/meteo.js (e il mare in PAGINA_MARE).  */
+const METEO_API='https://api.cyberboomer.io/aura/pagina';
+const urlFc=s=>METEO_API+'/previsione?spot='+encodeURIComponent(s.id);
+const urlMar=s=>METEO_API+'/onde?spot='+encodeURIComponent(s.id);
 
 const MODELS=[
   {id:'ecmwf_ifs025',label:'ECMWF',v:'--m-ecmwf'},
