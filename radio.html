@@ -57,12 +57,12 @@
     <div class="dentro">
 
       <div class="kick">radio &middot; <b>trasmettiamo dal buio</b></div>
-      <h1 class="titolone">RADIO<span class="c" style="color:#38E08A">.</span></h1>
+      <h1 class="titolone">RADIO<span class="c" style="color:#16E0DC">.</span></h1>
 
       <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json):
            il player è stato misurato dal runner, ma nessuno l'ha ancora
            sentita suonare. In pagina si dice «in prova», mai «accesa». -->
-      <p class="stato-radio"><span class="spia"></span> in prova &middot; onda 01</p>
+      <p class="stato-radio" id="stato"><span class="spia"></span> in prova &middot; onda 01 &middot; <span id="quando">sto guardando l&rsquo;orario&hellip;</span></p>
 
       <p class="occhiello">Musica nostra. Nessun campione di nessuno.<br>
       Va in onda alle <b>20.26</b>, ora di Roma. Fuori orario si sente la replica.</p>
@@ -71,34 +71,40 @@
       nessuna riproduzione parte da sola, e nessuno ti insegue.</p>
 
       <div class="ascolto">
-        <button class="bottone pieno verde" id="tasto" type="button">&#9654;&ensp;Ascolta l'onda</button>
-        <audio id="onda" preload="none"
-               src="https://radio-anima.pages.dev/audio/onda-01-diretta.mp3"></audio>
+        <button class="bottone pieno ciano" id="tasto" type="button">&#9654;&ensp;Ascolta l'onda</button>
+        <audio id="onda" preload="none"></audio>
         <p class="riga-mono" id="esito">onda 01 &middot; pronta</p>
       </div>
-
-      <p class="occhiello piccolo">Il player intero, con l'orario e la replica, sta su
-      <a href="https://radio-anima.pages.dev" rel="noopener">il dominio della radio &#8599;</a>
-      &mdash; questa è la porta dalla vetrina.</p>
 
     </div>
   </section>
 </main>
 
 <style>
-/* La radio è una STANZA DEL GIOCO: verde #38E08A, non il giallo dell'agenzia.
-   Il colore segue il mestiere della stanza, non il dominio. — JUDY 07/09 */
-.blocco#radio .kick b{color:#38E08A}
+/* ⚠️ 2026-09-13 — QUESTA RIGA DICEVA IL FALSO E VA LETTA.
+   Fino a oggi qui c'era scritto «La radio è una STANZA DEL GIOCO: verde
+   #38E08A». Era una mia scelta del 07/09, e la casa la contraddiceva in tre
+   punti: il menu di questa pagina è «le stanze di CHILL», la sua stella nel
+   piede è ciano, e CHILL si descrive come «le cose che si tengono accese
+   mentre si fa altro» — cioè una radio. Il Direttore ha ratificato il ciano
+   il 13/09.
+   Il canone non cambia: il colore segue il MESTIERE della stanza, non il
+   dominio. Cambia il mestiere che avevo letto. Ciano #16E0DC, 11,7:1 sul
+   nero. — JUDY 13/09 */
+.blocco#radio .kick b{color:#16E0DC}
 .stato-radio{display:flex; align-items:center; gap:.55rem; margin:0 0 1.2rem;
-  font-family:var(--mono); font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:#38E08A}
-.stato-radio .spia{width:8px; height:8px; border-radius:50%; background:#38E08A;
-  box-shadow:0 0 9px #38E08A; animation:respiro-radio 2.4s ease-in-out infinite}
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:#16E0DC}
+.stato-radio .spia{width:8px; height:8px; border-radius:50%; background:#16E0DC;
+  box-shadow:0 0 9px #16E0DC}
+/* la spia respira SOLO quando è davvero l'ora: una luce che pulsa mentre si
+   sente la replica direbbe una cosa che non è. — JUDY 13/09 */
+.stato-radio.diretta .spia{animation:respiro-radio 2.4s ease-in-out infinite}
 @keyframes respiro-radio{0%,100%{opacity:1}50%{opacity:.3}}
 @media (prefers-reduced-motion:reduce){.stato-radio .spia{animation:none}}
 .nota-radio{color:var(--muto); max-width:46ch}
 .ascolto{margin:2rem 0 1.4rem}
-.bottone.verde{background:#38E08A; border-color:#38E08A; color:#04170d}
-.bottone.verde:hover{filter:brightness(1.08)}
+.bottone.ciano{background:#16E0DC; border-color:#16E0DC; color:#0A0A0A}
+.bottone.ciano:hover{filter:brightness(1.08)}
 .ascolto audio{display:none; width:100%; max-width:34rem; margin-top:1rem}
 .ascolto audio.visibile{display:block}
 .occhiello.piccolo{font-size:.9rem; color:var(--muto)}
@@ -108,17 +114,59 @@
 /* Il tasto esiste perché i browser bloccano l'audio che parte da solo.
    E se il file non risponde la pagina LO DICE: non finge un'onda che non c'è. */
 (function(){
+  /* ── L'INDIRIZZO DELL'ONDA, E STA SCRITTO UNA VOLTA SOLA ────────────────
+     Quando l'onda cambia casa — un dominio nostro, o la macchina di casa che
+     il Direttore ha messo all'orizzonte il 13/09 — si cambia QUESTA riga e
+     nient'altro.
+     Non è un link: è un file. Un <audio src> suona da un altro dominio senza
+     chiedere permesso a nessuno, ed è per questo che il player può stare qui
+     invece che dietro una porta. — JUDY 13/09                              */
+  var ONDA = 'https://radio-anima.pages.dev/audio/onda-01-diretta.mp3';
+
+  /* ── L'ORARIO È UNA REGOLA, NON UN DATO ─────────────────────────────────
+     20.26, ora di Roma, ogni sera: non si chiede alla rete, si calcola. Il
+     player «intero» stava su un altro dominio solo perché leggeva un
+     onda.json che una fetch cross-origin non può raggiungere. Per l'orario
+     quel file non serviva mai: serviva per il titolo della traccia, e le onde
+     oggi sono una. Quando saranno molte il titolo si genera in pagina, non si
+     va a chiederlo. — JUDY 13/09                                           */
+  var ORA = 20, MIN = 26, FINESTRA = 15;
+
   var t=document.getElementById('tasto'), a=document.getElementById('onda'), e=document.getElementById('esito');
+  var stato=document.getElementById('stato'), quando=document.getElementById('quando');
+  a.src = ONDA;
+
+  function minutiRoma(){
+    var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false});
+    var h=0,m=0;
+    f.formatToParts(new Date()).forEach(function(x){ if(x.type==='hour')h=+x.value; if(x.type==='minute')m=+x.value; });
+    return h*60+m;
+  }
+  function dipingiOrario(){
+    var inizio=ORA*60+MIN, adesso=minutiRoma(), diretta=(adesso>=inizio && adesso<inizio+FINESTRA);
+    stato.classList.toggle('diretta', diretta);
+    quando.textContent = diretta ? 'in diretta adesso' : 'in replica';
+    if(!e.dataset.tocco) e.textContent = diretta
+      ? '\u00e8 l\u2019ora: alza il volume'
+      : 'la diretta \u00e8 alle 20.26 \u2014 adesso si sente la replica';
+  }
+  dipingiOrario();
+  setInterval(dipingiOrario, 30000);
+
   t.addEventListener('click', function(){
     a.classList.add('visibile'); a.controls=true;
     if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){
+      e.dataset.tocco='1';
       e.textContent='il browser non lascia partire l\u2019audio \u2014 usa i comandi qui sotto'; }); }
     else a.pause();
   });
-  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa'; e.textContent='sta suonando'; });
-  a.addEventListener('pause',  function(){ t.innerHTML='\u25B6&ensp;Ascolta l\u2019onda'; });
+  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa'; e.dataset.tocco='1'; e.textContent='sta suonando'; });
+  /* in pausa la riga tornava a dire «sta suonando», che era falso appena
+     smetteva di suonare: si libera e si ridipinge l'orario. — JUDY 13/09 */
+  a.addEventListener('pause',  function(){ t.innerHTML='\u25B6&ensp;Ascolta l\u2019onda';
+    delete e.dataset.tocco; dipingiOrario(); });
   a.addEventListener('error',  function(){
-    t.disabled=true; t.innerHTML='onda non raggiungibile';
+    t.disabled=true; t.innerHTML='onda non raggiungibile'; e.dataset.tocco='1';
     e.textContent='il file dell\u2019onda non risponde: lo diciamo invece di far finta'; });
 })();
 </script>
@@ -173,10 +221,28 @@
 </p>
     <div class="coda-riga">
       <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
-      <span><a href="mailto:pierluigidepalo@gmail.com">scriveteci</a> &middot; <a href="index.html">home</a></span>
+      <span><button type="button" class="posta" data-u="pierluigidepalo" data-d="gmail.com">scriveteci</button> &middot; <a href="index.html">home</a></span>
     </div>
   </div>
 </footer>
 <script src="s77.js" defer></script>
+<style>.posta{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.posta.ok{text-decoration:none;opacity:.7}</style>
+<script>
+/* TOPPA POSTA — 2026-09-07, ROGUE. Niente mailto: un clic non apre piu' nessun
+   programma di posta (si aprivano tutti, Tuta compresa). Copia e basta.
+   E l'indirizzo non sta piu' in un href: e' in due pezzi, montati qui.
+   ⚠️ Arrivata qui il 13/09: questa pagina e' nata DOPO la toppa, da un modello
+   vecchio, ed era l'unica delle dodici rimasta col mailto. Una toppa passata
+   su undici pagine su dodici non e' una toppa: e' una statistica. */
+document.querySelectorAll('.posta').forEach(function(b){
+  b.addEventListener('click',function(){
+    var a=b.dataset.u+'@'+b.dataset.d,t=b.textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(a):Promise.reject())
+      .then(function(){b.textContent='copiato: '+a;b.classList.add('ok')})
+      .catch(function(){b.textContent=a;b.classList.add('ok')});
+    setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);
+  });
+});
+</script>
 </body>
 </html>
