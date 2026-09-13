@@ -147,6 +147,7 @@
   var t=document.getElementById('tasto'), a=document.getElementById('onda'), e=document.getElementById('esito');
   var stato=document.getElementById('stato'), quando=document.getElementById('quando');
   var pronta = 'pronta';   // cosa dice la riga sotto il tasto quando non suona
+  var PROGRAMMA = null;    // l'onda di OGGI, quando la radio ce l'ha detta
 
   function minutiRoma(){
     var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false});
@@ -154,10 +155,31 @@
     f.formatToParts(new Date()).forEach(function(x){ if(x.type==='hour')h=+x.value; if(x.type==='minute')m=+x.value; });
     return h*60+m;
   }
+  /* il GIORNO di Roma, accanto all'ora di Roma: il palinsesto della radio e'
+     settimanale, e il giorno del visitatore non c'entra niente. A mezzanotte
+     e mezza a New York a Roma e' gia' domani. — JUDY 13/09 */
+  var GIORNI = {Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6};
+  function giornoRoma(){
+    return GIORNI[new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Rome',weekday:'short'}).format(new Date())];
+  }
+
+  /* Dentro la finestra si manda la DIRETTA, fuori la REPLICA — perche' e'
+     quello che la pagina dice due righe piu' su, e finora non lo faceva.
+     Si cambia file solo se non sta suonando: tagliare l'ascolto a qualcuno
+     per aggiornare un indirizzo sarebbe peggio del problema. — JUDY 13/09 */
+  function scegliOnda(diretta){
+    if(!PROGRAMMA || !a.paused) return;
+    var pezzo = diretta ? PROGRAMMA.diretta : (PROGRAMMA.replica || PROGRAMMA.diretta);
+    if(!pezzo || !pezzo.file) return;
+    var url = CASA_ONDA + PROGRAMMA.base + pezzo.file;
+    if(a.src !== url) a.src = url;
+  }
+
   function dipingiOrario(){
     var inizio=ORA*60+MIN, adesso=minutiRoma(), diretta=(adesso>=inizio && adesso<inizio+FINESTRA);
     stato.classList.toggle('diretta', diretta);
     quando.textContent = diretta ? 'in diretta adesso' : 'in replica';
+    scegliOnda(diretta);
   }
   dipingiOrario();
   setInterval(dipingiOrario, 30000);
@@ -180,13 +202,32 @@
   fetch(CASA_ONDA + 'onda.json', {cache:'no-cache'})
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(o){
-      var d = o && o.diretta;
+      /* ⚠️ 2026-09-13 — QUI IL BUG NON ERA CHIUSO, e va letto.
+         onda.json ha una SETTIMANA: `settimana` con le chiavi "0".."6", una
+         voce per ogni giorno, ognuna col suo titolo, la sua diretta e la sua
+         replica. Il livello alto e' il RIPIEGO, non il palinsesto.
+         Questa funzione leggeva il livello alto: domenica 13/09 diceva
+         «onda 01» mentre la settimana per quel giorno dice «onda 02 — musica
+         di casa» (DROP e SUONO). Cioe' ESATTAMENTE il pezzo fermo che il
+         Direttore sentiva in macchina: tolto l'indirizzo scritto a mano,
+         restava la chiave sbagliata. Misurato dal suo terminale.
+         Le chiavi 0-6 sono quelle di getDay(): 0 = domenica. E' l'unica cosa
+         qui dentro che non ho misurato — la convenzione la decide chi scrive
+         il file, cioe' SUONO. Se un giorno cambiasse, il ripiego regge: senza
+         la voce del giorno si torna al livello alto invece di rompersi. */
+      var oggi = (o.settimana || {})[String(giornoRoma())] || o;
+      var d = oggi.diretta;
       if(!d || !d.file) throw 0;
-      a.src = CASA_ONDA + (o.base || '') + d.file;
-      var nome = (o.titolo || '').replace(/^[^\u00b7]*\u00b7\s*/, '') || ('onda ' + (o.onda || ''));
+      PROGRAMMA = { base: o.base || '', diretta: d, replica: oggi.replica };
+      /* il titolo e' «◉ SYSTEMA 77 RADIO · onda 02 — musica di casa»: qui
+         serve solo l'ultimo pezzo. Prima una regex ne toglieva uno solo e
+         lasciava in pagina il nome della stazione due volte. */
+      var nome = String(oggi.titolo || o.titolo || '').split('\u00b7').pop().trim()
+                 || ('onda ' + (oggi.onda || o.onda || ''));
       document.getElementById('stato-onda').textContent = 'in prova \u00b7 ' + nome;
       pronta = nome + ' \u00b7 pronta';
       if(a.paused) e.textContent = pronta;
+      dipingiOrario();   // mette la sorgente giusta: diretta o replica
     })
     .catch(function(){
       e.textContent = 'non ho potuto chiedere alla radio quale onda \u00e8 in corso: senti l\u2019ultima che conosco';
