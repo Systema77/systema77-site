@@ -59,10 +59,17 @@
       <div class="kick">radio &middot; <b>trasmettiamo dal buio</b></div>
       <h1 class="titolone">RADIO<span class="c" style="color:#16E0DC">.</span></h1>
 
-      <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json):
-           il player è stato misurato dal runner, ma nessuno l'ha ancora
-           sentita suonare. In pagina si dice «in prova», mai «accesa». -->
-      <p class="stato-radio" id="stato"><span class="spia"></span> in prova &middot; onda 01 &middot; <span id="quando">sto guardando l&rsquo;orario&hellip;</span></p>
+      <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json).
+           ⚠️ Qui c'era scritto «nessuno l'ha ancora sentita suonare»: dal
+           2026-09-13 è FALSO — il Direttore l'ha aperta e ha detto «super», e
+           il runner ha misurato il suono tre volte (12,0 s avanzati, 289.152
+           byte decodificati, RMS 0,131-0,140). Lo stato resta «in prova»
+           perché lo decide il registro, non io: si cambia là, poi qui.
+           L'ONDA NON SI SCRIVE PIÙ A MANO: la chiede alla radio (script in fondo).
+           L'ORARIO invece È una regola e non un dato: 20.26 ora di Roma, ogni
+           sera, si calcola in pagina senza chiedere niente a nessuno.
+           — JUDY 13/09 -->
+      <p class="stato-radio" id="stato"><span class="spia"></span> <span id="stato-onda">in prova</span> &middot; <span id="quando">sto guardando l&rsquo;orario&hellip;</span></p>
 
       <p class="occhiello">Musica nostra. Nessun campione di nessuno.<br>
       Va in onda alle <b>20.26</b>, ora di Roma. Fuori orario si sente la replica.</p>
@@ -72,8 +79,12 @@
 
       <div class="ascolto">
         <button class="bottone pieno ciano" id="tasto" type="button">&#9654;&ensp;Ascolta l'onda</button>
-        <audio id="onda" preload="none"></audio>
-        <p class="riga-mono" id="esito">onda 01 &middot; pronta</p>
+        <!-- Questo src è il RIPIEGO, non la verità: lo script qui sotto lo
+             sostituisce con l'onda che la radio sta davvero trasmettendo.
+             Sta nel tag apposta: se lo script non gira, qualcosa suona lo stesso. -->
+        <audio id="onda" preload="none"
+               src="https://radio-anima.pages.dev/audio/onda-01-diretta.mp3"></audio>
+        <p class="riga-mono" id="esito">pronta</p>
       </div>
 
     </div>
@@ -114,14 +125,15 @@
 /* Il tasto esiste perché i browser bloccano l'audio che parte da solo.
    E se il file non risponde la pagina LO DICE: non finge un'onda che non c'è. */
 (function(){
-  /* ── L'INDIRIZZO DELL'ONDA, E STA SCRITTO UNA VOLTA SOLA ────────────────
+  /* ── DOVE ABITA LA RADIO, E STA SCRITTO UNA VOLTA SOLA ──────────────────
+     Nello script l'indirizzo compariva tre volte. Adesso è qui, e basta.
+     Resta anche nel tag <audio> qui sopra, ma con un mestiere diverso: quello
+     è il RIPIEGO che suona se lo script non gira. Due posti, tutti e due
+     dichiarati — non tre copie che invecchiano ognuna per conto suo.
      Quando l'onda cambia casa — un dominio nostro, o la macchina di casa che
-     il Direttore ha messo all'orizzonte il 13/09 — si cambia QUESTA riga e
-     nient'altro.
-     Non è un link: è un file. Un <audio src> suona da un altro dominio senza
-     chiedere permesso a nessuno, ed è per questo che il player può stare qui
-     invece che dietro una porta. — JUDY 13/09                              */
-  var ONDA = 'https://radio-anima.pages.dev/audio/onda-01-diretta.mp3';
+     il Direttore ha messo all'orizzonte il 13/09 — si cambiano quelle due.
+     — JUDY 13/09                                                           */
+  var CASA_ONDA = 'https://radio-anima.pages.dev/';
 
   /* ── L'ORARIO È UNA REGOLA, NON UN DATO ─────────────────────────────────
      20.26, ora di Roma, ogni sera: non si chiede alla rete, si calcola. Il
@@ -134,7 +146,7 @@
 
   var t=document.getElementById('tasto'), a=document.getElementById('onda'), e=document.getElementById('esito');
   var stato=document.getElementById('stato'), quando=document.getElementById('quando');
-  a.src = ONDA;
+  var pronta = 'pronta';   // cosa dice la riga sotto il tasto quando non suona
 
   function minutiRoma(){
     var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false});
@@ -146,27 +158,53 @@
     var inizio=ORA*60+MIN, adesso=minutiRoma(), diretta=(adesso>=inizio && adesso<inizio+FINESTRA);
     stato.classList.toggle('diretta', diretta);
     quando.textContent = diretta ? 'in diretta adesso' : 'in replica';
-    if(!e.dataset.tocco) e.textContent = diretta
-      ? '\u00e8 l\u2019ora: alza il volume'
-      : 'la diretta \u00e8 alle 20.26 \u2014 adesso si sente la replica';
   }
   dipingiOrario();
   setInterval(dipingiOrario, 30000);
 
+  /* LA VETRINA SEGUE LA RADIO, non la fotografa.
+     Il 13/09 il Direttore, in macchina, sentiva UN pezzo solo da qui mentre dal
+     laptop ne sentiva di nuovi: l'indirizzo dell'onda era scritto a mano in
+     questa pagina e stava fermo a onda 01, mentre la radio trasmetteva la 02
+     («musica di casa»: DROP e SUONO). Una copia dell'indirizzo e' una copia
+     che invecchia, e questa aveva invecchiato di una trasmissione intera.
+     Qui si chiede a onda.json, che e' la verita' della radio.
+     Se non risponde, o se ha una forma che questa pagina non sa leggere,
+     resta il file scritto nel tag e LO SI DICE: si degrada, non si finge.
+     ── e questa chiamata e' anche la prova che una cosa che avevo dato per
+     certa era falsa: avevo scritto che una fetch da systema77.com verso il
+     dominio della radio non poteva funzionare per via del CORS. Non l'avevo
+     misurato, l'avevo dedotto da un mio commento del 07/09. Funziona.
+     Cloudflare Pages serve i file statici con Access-Control-Allow-Origin.
+     — JUDY 13/09                                                           */
+  fetch(CASA_ONDA + 'onda.json', {cache:'no-cache'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(o){
+      var d = o && o.diretta;
+      if(!d || !d.file) throw 0;
+      a.src = CASA_ONDA + (o.base || '') + d.file;
+      var nome = (o.titolo || '').replace(/^[^\u00b7]*\u00b7\s*/, '') || ('onda ' + (o.onda || ''));
+      document.getElementById('stato-onda').textContent = 'in prova \u00b7 ' + nome;
+      pronta = nome + ' \u00b7 pronta';
+      if(a.paused) e.textContent = pronta;
+    })
+    .catch(function(){
+      e.textContent = 'non ho potuto chiedere alla radio quale onda \u00e8 in corso: senti l\u2019ultima che conosco';
+    });
+
   t.addEventListener('click', function(){
     a.classList.add('visibile'); a.controls=true;
     if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){
-      e.dataset.tocco='1';
       e.textContent='il browser non lascia partire l\u2019audio \u2014 usa i comandi qui sotto'; }); }
     else a.pause();
   });
-  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa'; e.dataset.tocco='1'; e.textContent='sta suonando'; });
-  /* in pausa la riga tornava a dire «sta suonando», che era falso appena
-     smetteva di suonare: si libera e si ridipinge l'orario. — JUDY 13/09 */
+  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa'; e.textContent='sta suonando'; });
+  /* in pausa la riga sotto il tasto restava a «sta suonando», che era falso
+     appena smetteva di suonare: torna a dire quale onda è pronta. — JUDY 13/09 */
   a.addEventListener('pause',  function(){ t.innerHTML='\u25B6&ensp;Ascolta l\u2019onda';
-    delete e.dataset.tocco; dipingiOrario(); });
+    e.textContent = pronta; });
   a.addEventListener('error',  function(){
-    t.disabled=true; t.innerHTML='onda non raggiungibile'; e.dataset.tocco='1';
+    t.disabled=true; t.innerHTML='onda non raggiungibile';
     e.textContent='il file dell\u2019onda non risponde: lo diciamo invece di far finta'; });
 })();
 </script>
