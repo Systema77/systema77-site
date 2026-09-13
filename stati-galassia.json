@@ -1,6 +1,6 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
-  "aggiornato": "2026-09-09",
+  "aggiornato": "2026-09-13",
 
   "case": {
     "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
@@ -9,14 +9,14 @@
     "cyberboomer.ninja":     { "repo": "cyberboomer-ninja-site","voce": "la divulgazione, l'archivio",    "colore": "#5C7CFF", "guardiano": "strumenti/collaudo.mjs" },
     "anima.solar":           { "repo": "anima-solar-site",      "voce": "una landing: in sviluppo",       "colore": "#C9A15E", "guardiano": null },
     "radio-anima.pages.dev": { "repo": null,                    "voce": "la radio, in prova: sorgente fuori da git",  "colore": null,   "guardiano": null },
-    "systema77.studio":      { "repo": "systema77-studio-site", "voce": "il laboratorio: pellicola + AI, il cinema, i servizi", "colore": null, "guardiano": "strumenti/collaudo.mjs",
+    "systema.studio":        { "repo": "systema77-studio-site", "voce": "la casa di produzione: immagini, film, suono — pellicola e nastro + AI", "colore": null, "guardiano": "strumenti/collaudo.mjs",
                                "stato": "in allestimento", "dal": "2026-09-08",
-                               "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2): il dominio va comprato (ROGUE, col suo ok) e il repo nasce sul modello delle case. Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio. Il nome è `.studio` dal 10/09: `.film` non era disponibile al registrar (bacheca 10/09 16:18)." }
+                               "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2). Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio. Il nome è `.studio` dal 10/09 perché `.film` non era disponibile al registrar (bacheca 10/09 16:18) — e infatti `systema77.film` non risolve, misurato il 13/09. ⚠️ CORREZIONE 13/09, e non è un dettaglio: qui c'era scritto `systema77.studio`. Il dominio che il Direttore ha comprato è `systema.studio`, SENZA il 77. Misurato con getent: `systema.studio` risolve su Cloudflare (2606:4700::/32, coerente con un acquisto fresco), mentre `systema77.studio` risolve su 207.207.210.229 e .107 — né Cloudflare né GitHub Pages, nessun nome inverso: NON è nostro. La riga vecchia avrebbe mandato i visitatori di systema77.com al dominio di uno sconosciuto, il giorno in cui la porta si fosse aperta. Il registro registrava il piano, non l'acquisto. Il NOME della casa resta SYSTEMA 77 (ordine del Direttore, 13/09): `.studio` è solo l'indirizzo. Il colore resta null finché il Direttore non sceglie fra le tre direzioni disegnate." }
   },
 
   "porte": {
     "_": "da ogni casa si deve poter andare a queste. Un link vero, href con https://. Una porta verso una casa in allestimento è ATTESA, non pretesa.",
-    "systema77-site":         ["animagame.io", "cyberboomer.ninja", "systema77.studio"],
+    "systema77-site":         ["animagame.io", "cyberboomer.ninja", "systema.studio"],
     "animagame-site":         ["systema77.com"],
     "cyberboomer-ninja-site": ["systema77.com", "anima.solar"],
     "anima-solar-site":       ["systema77.com", "animagame.io", "cyberboomer.ninja"],
