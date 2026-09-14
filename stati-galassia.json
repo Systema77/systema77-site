@@ -1,6 +1,6 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
-  "aggiornato": "2026-09-13",
+  "aggiornato": "2026-09-14",
 
   "case": {
     "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
@@ -29,7 +29,7 @@
       "stato": "in prova",
       "dal": "2026-09-06",
       "sorgente": "animagame-site/radio/ sul Mac, FUORI da ogni git apposta: l'onda pesa ~6 MB a settimana, quasi 2 GB l'anno che resterebbero nella cronologia per sempre. Si pubblica con `bash scripts/pubblica.sh radio --vai`, per caricamento diretto. Il progetto Pages NON è collegato a un repo e non deve esserlo: collegarlo pubblicherebbe una radio muta. Misurato da SUONO, 2026-09-06. ⚠️ Il repo `radio-anima-site` NON contiene la radio.",
-      "perche": "ordine del Direttore del 06/09: «il banco di prova è la vetrina». SUONO ha misurato i byte del player riparato, nessuno l'ha ancora sentita suonare: in pagina si dice «in prova», mai «accesa»",
+      "perche": "ordine del Direttore del 06/09: «il banco di prova è la vetrina». SUONO ha misurato i byte del player riparato; in pagina si dice «in prova», mai «accesa». ⚠️ AGGIORNATA 14/09: fino a oggi questa riga diceva «nessuno l'ha ancora sentita suonare», e non è più vero — il Direttore ha scritto «ho sentito un po' la radio. ma poco». È il PRIMO orecchio umano che la raggiunge, e si scrive il giorno che succede. Resta «in prova» lo stesso, per due ragioni misurate e non per prudenza: «un po'» non è un'onda intera, e il 13/09 la pagina serviva l'onda del RIPIEGO (onda 01) invece di quella del giorno (onda 02) — quindi parte di quello che ha sentito ERA il guasto, e un ascolto prima della riparazione non certifica dopo. Passa ad «accesa» quando qualcuno ha sentito un'onda dall'inizio alla fine DOPO la riparazione del 13/09, e lo dice qui.",
       "se_in_prova": {
         "vietato_testo": "radio[^.]{0,80}?\\b(attiva|accesa|funziona già)\\b"
       },
@@ -47,6 +47,19 @@
       "perche": "le due rotte del Worker sono dichiarate e spente",
       "se_in_allestimento": {
         "vietato_testo": "\\baura\\b[^.]{0,40}?\\b(è acces[ao]|funziona già|è online)\\b"
+      }
+    },
+    "podcast": {
+      "stato": "al cancello",
+      "dal": "2026-09-14",
+      "pagina": "systema77.com/chill.html#podcast — una carta, non una pagina: `podcast.html` NON esiste ancora, ed è giusto così finché non c'è un episodio",
+      "perche": "il terzo di CHILL, e l'unico dei tre senza materiale pubblicabile. Il 09/08 SUONO ha misurato col `ffprobe` i 17 minuti di `Systcast77_n1_raw.m4a`: encoder=Google, contenitore dash, due conduttori sintetici a 126 e 225 Hz. Verdetto: «si può pubblicare? NO — licenza di un servizio esterno, non nostra». Il 14/09 il Direttore ha scelto la via d'uscita che SUONO stessa aveva scritto («non è un problema di privacy, è di licenza — e quello si risolve PRODUCENDO»): si ricarrozzano le SUE ricerche NotebookLM, la prima è «Claude Token e API», ripartendo dalle FONTI e mai dall'audio. ⚠️ A tenere il confine non è la buona volontà ma `SUONO/motore/cancello.py`, che pretende una garanzia con verdetto `rights: own` e l'impronta sha256 del file di oggi: un file uscito da NotebookLM non passa, e non può passare. Entra nel registro PRIMA di esistere, come systema77.studio: una cosa dichiarata e spenta il giro la controlla, una cosa taciuta no. Passa a «in prova» quando `cancello.py` dà verde su un episodio vero e `podcast.html` risponde.",
+      "se_al_cancello": {
+        "vietato_link": "podcast\\.html",
+        "vietato_testo": "podcast[^.]{0,80}?\\b(ascolta|in onda|puntata|episodio|disponibile|attivo|acceso|online)\\b"
+      },
+      "se_in_prova": {
+        "vietato_testo": "podcast[^.]{0,80}?\\b(al cancello|in arrivo)\\b"
       }
     },
     "magliette": {
