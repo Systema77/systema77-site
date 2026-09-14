@@ -18,7 +18,7 @@ node strumenti/galassia.mjs
 | `animagame.io` | il gioco, a invito | verde `#38E08A`, mai fondale | `animagame-site` | `strumenti/collaudo.mjs` |
 | `cyberboomer.ninja` | la divulgazione, la voce — dall'08/09 l'archivio | blu-link `#5C7CFF` | `cyberboomer-ninja-site` | `strumenti/collaudo.mjs` (di FLUX, riscritto a due mani l'08/09) |
 | `anima.solar` | una landing: «in sviluppo» | ambra `#C9A15E` | `anima-solar-site` | nessuno |
-| `radio-anima.pages.dev` | la radio, in prova | — | **nessuno** (vedi sotto) | nessuno |
+| `radio-anima.pages.dev` | la radio, **accesa** dal 14/09 | — | **nessuno** (vedi sotto) | nessuno |
 | `systema77.studio` | il laboratorio: pellicola + AI — **in allestimento** dall'08/09 (`.film` non era disponibile: rinominato il 10/09) | — | `systema77-studio-site`, **da creare** | `strumenti/collaudo.mjs`, quando nascerà |
 
 La sesta casa è nel registro **prima di esistere**, apposta (08/09): il giro
