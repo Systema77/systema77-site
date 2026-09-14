@@ -551,7 +551,9 @@ async function load(){
   const[fc,mar]=await Promise.allSettled(jobs);
   document.body.classList.remove('refreshing');
   if(fc.status==='rejected'){$('loading').style.display='none';$('err').style.display='block';
-    $('err').innerHTML='<b>Impossibile scaricare le previsioni</b> ('+fc.reason.message+'). Controlla la connessione e premi «Aggiorna».';
+    const motivo=/^HTTP \d+$/.test(fc.reason.message||'')?' ('+fc.reason.message+')':'';
+    $('err').innerHTML='<b>Impossibile scaricare le previsioni</b>'+motivo+'. Controlla la connessione e premi «Aggiorna».';
+    $('updated').textContent='Previsioni non aggiornate.';
     return}
   S.fc=fc.value;S.times=S.fc.hourly.time;S.offH=(S.fc.utc_offset_seconds||7200)/3600;
   S.mar={};
