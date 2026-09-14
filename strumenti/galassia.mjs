@@ -121,12 +121,18 @@ for (const [dominio, casa] of Object.entries(REG.case)) {
   const r = spawnSync(process.execPath, [g], { cwd: dir, encoding: 'utf8', env: process.env, timeout: 600000 });
   const righe = (r.stdout || '').replace(/\x1b\[[0-9;]*m/g, '').trim().split('\n');
   const ultima = righe.filter(x => x.trim()).slice(-2).join(' · ').trim();
-  // Il verde cieco (misurato l'08/09): senza Playwright i guardiani di due case
-  // stampano «NON COLLAUDATO» ed escono 0, e questo giro li dava per verdi
-  // senza che un browser fosse mai partito. Il giro leggeva solo l'uscita:
-  // adesso legge anche la parola, e un verde senza occhi è rosso.
+  // Il verde cieco (misurato l'08/09): un guardiano che stampa «NON COLLAUDATO» ed
+  // esce 0, e questo giro che lo dava per verde senza che un browser fosse mai partito.
+  // Il giro leggeva solo l'uscita: adesso legge anche la parola, e un verde senza occhi
+  // è rosso. Resta qui anche dopo la riparazione del 13/09 — non come diagnosi di tutti
+  // i giorni ma come guardia contro la ricaduta: se un domani un guardiano tornasse a
+  // firmare senza aver guardato, il giro se ne accorge lo stesso.
+  //   ⚠️ Fino al 13/09 il rimedio stampato qui era «npm i -D playwright nella casa», e
+  //   mandava fuori strada: nessuna delle case ha un package.json, e nessuna deve
+  //   averlo. I guardiani ora cercano un browser GIÀ INSTALLATO (Mac, Linux, cache di
+  //   Playwright), come fa .ninja da giorni. Il rimedio vero è indicargli dov'è.
   const cieco = righe.some(x => /NON COLLAUDATO/.test(x));
-  if (r.status === 0 && cieco) male(`${dominio} — il guardiano dice verde ma NON ha aperto un browser: verde cieco`, 'i controlli vivi (sbordamento, console) non sono girati: npm i -D playwright nella casa, poi rilancia');
+  if (r.status === 0 && cieco) male(`${dominio} — il guardiano dice verde ma NON ha aperto un browser: verde cieco`, 'i controlli vivi (sbordamento, console) non sono girati: nessun browser trovato nella casa — indica COLLAUDO_BROWSER=/percorso/del/browser, poi rilancia');
   else if (r.status === 0) ok(`${dominio} — il guardiano è verde`, ultima);
   else male(`${dominio} — il guardiano è rosso (uscita ${r.status})`, righe.filter(x => /✗/.test(x)).slice(0, 4).join(' · ') || ultima);
 }
