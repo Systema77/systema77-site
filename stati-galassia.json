@@ -26,19 +26,20 @@
   "stati": {
     "_": "quello che la galassia dichiara vivo o spento. Il giro cerca nel testo VISIBILE di ogni pagina di ogni casa.",
     "radio": {
-      "stato": "in prova",
-      "dal": "2026-09-06",
+      "stato": "accesa",
+      "dal": "2026-09-14",
       "sorgente": "animagame-site/radio/ sul Mac, FUORI da ogni git apposta: l'onda pesa ~6 MB a settimana, quasi 2 GB l'anno che resterebbero nella cronologia per sempre. Si pubblica con `bash scripts/pubblica.sh radio --vai`, per caricamento diretto. Il progetto Pages NON è collegato a un repo e non deve esserlo: collegarlo pubblicherebbe una radio muta. Misurato da SUONO, 2026-09-06. ⚠️ Il repo `radio-anima-site` NON contiene la radio.",
-      "perche": "ordine del Direttore del 06/09: «il banco di prova è la vetrina». SUONO ha misurato i byte del player riparato; in pagina si dice «in prova», mai «accesa». ⚠️ AGGIORNATA 14/09: fino a oggi questa riga diceva «nessuno l'ha ancora sentita suonare», e non è più vero — il Direttore ha scritto «ho sentito un po' la radio. ma poco». È il PRIMO orecchio umano che la raggiunge, e si scrive il giorno che succede. Resta «in prova» lo stesso, per due ragioni misurate e non per prudenza: «un po'» non è un'onda intera, e il 13/09 la pagina serviva l'onda del RIPIEGO (onda 01) invece di quella del giorno (onda 02) — quindi parte di quello che ha sentito ERA il guasto, e un ascolto prima della riparazione non certifica dopo. Passa ad «accesa» quando qualcuno ha sentito un'onda dall'inizio alla fine DOPO la riparazione del 13/09, e lo dice qui.",
+      "perche": "🟢 ACCESA dal 14/09, e il criterio l'avevo scritto io stesso qui sopra stamattina: «passa ad accesa quando qualcuno ha sentito un'onda dall'inizio alla fine DOPO la riparazione del 13/09». È successo: il Direttore ha ascoltato l'onda 02 per intero e ha detto «è stupenda». Da «in prova» dal 06/09 (ordine del Direttore: «il banco di prova è la vetrina») ad «accesa» ci sono voluti otto giorni, e nel mezzo tre misure di macchina — DROP il 07/09 (onda.json 200, i due MP3 esistono), SUONO il 10/09 (12,0 s avanzati, 289.152 byte decodificati, RMS 0,131-0,140), il runner il 13/09 — più la riparazione del guasto vivo del 13/09. ⚠️ CORREZIONE DI UN MIO ERRORE, 14/09 mattina: in questa riga avevo scritto che quello del Direttore era «il PRIMO orecchio umano che la raggiunge». È FALSO, e la prova stava in un commento che avevo scritto io stessa in radio.html il 13/09: lui l'aveva già aperta quel giorno e aveva detto «super». 📜 Una macchina che misura i byte non è un orecchio, ma un orecchio che è già passato non torna vergine perché me lo dimentico: prima di scrivere «primo», si cerca il secondo. Quello che resta vero e che ha giustificato l'attesa: «un po'» non era un'onda intera, e il 13/09 la pagina serviva l'onda del RIPIEGO (onda 01) invece di quella del giorno (onda 02), quindi parte di quello che sentiva ERA il guasto. Oggi non più: onda intera, onda giusta, dopo la riparazione.",
+      "_regole": "⚠️ 14/09 — QUESTE TRE REGOLE ERANO MEZZE CIECHE, e l'ho MISURATO, non dedotto. Avevano l'àncora `radio[^.]{0,80}?`: la finestra si chiude al primo punto, e il titolo della pagina è «RADIO.» — il punto è un elemento di disegno, non punteggiatura. Risultato: mettendo lo stato ad «accesa» col testo ancora a «in prova», il giro ha visto animagame.io (due pagine) e NON ha visto né systema77.com/radio.html né chill.html, che sono le pagine della radio. È la stessa lezione delle magliette del 09/09: un'àncora nel posto sbagliato dà un verde che non vuol dire niente. Misurate le distanze vere fra la parola «radio» e la parola di stato: 267 caratteri su chill.html. Finestra portata a 320 su `[\\s\\S]`, che attraversa i punti. Provato su tutte e 29 le pagine delle quattro case: con lo stato «accesa» nessuna pagina fa scattare `se_accesa` (la galassia è coerente), e `se_in_prova`/`se_spenta` scattano su tutte e quattro le pagine della radio — cioè il guardiano RIFIUTA una ricaduta invece di limitarsi ad accettare. Nessun falso rosso su cyberboomer.ninja, anima.solar o magliette.",
       "se_in_prova": {
-        "vietato_testo": "radio[^.]{0,80}?\\b(attiva|accesa|funziona già)\\b"
+        "vietato_testo": "\\bradio\\b[\\s\\S]{0,320}?\\b(attiva|accesa|funziona già)\\b"
       },
       "se_spenta": {
         "vietato_link": "radio-anima\\.pages\\.dev",
-        "vietato_testo": "radio[^.]{0,80}?\\b(attiva|accesa|suona|sintonizzati|in prova)\\b"
+        "vietato_testo": "\\bradio\\b[\\s\\S]{0,320}?\\b(attiva|accesa|suona|sintonizzati|in prova)\\b"
       },
       "se_accesa": {
-        "vietato_testo": "radio[^.]{0,80}?\\b(in accordatura|in prova|spenta)\\b"
+        "vietato_testo": "\\bradio\\b[\\s\\S]{0,320}?\\b(in accordatura|in prova|spenta)\\b"
       }
     },
     "aura-pubblica": {

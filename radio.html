@@ -59,17 +59,22 @@
       <div class="kick">radio &middot; <b>trasmettiamo dal buio</b></div>
       <h1 class="titolone">RADIO<span class="c" style="color:#16E0DC">.</span></h1>
 
-      <!-- LO STATO. La radio è IN PROVA per registro (stati-galassia.json).
-           ⚠️ Qui c'era scritto «nessuno l'ha ancora sentita suonare»: dal
-           2026-09-13 è FALSO — il Direttore l'ha aperta e ha detto «super», e
-           il runner ha misurato il suono tre volte (12,0 s avanzati, 289.152
-           byte decodificati, RMS 0,131-0,140). Lo stato resta «in prova»
-           perché lo decide il registro, non io: si cambia là, poi qui.
+      <!-- LO STATO. La radio è ACCESA per registro (stati-galassia.json), dal
+           2026-09-14. Il criterio era scritto nel registro stesso — «un'onda
+           dall'inizio alla fine DOPO la riparazione del 13/09» — e il Direttore
+           l'ha soddisfatto: ha ascoltato l'onda 02 intera e ha detto «è stupenda».
+           Prima si è cambiato il registro, poi questa riga: mai il contrario.
+           ⚠️ E una correzione, perché la riga che stava qui è servita a
+           smentirmi: il 14/09 mattina avevo scritto nel registro che quello del
+           Direttore era «il PRIMO orecchio umano». Era falso, e la prova stava
+           proprio in questo commento, scritto da me il 13/09: lui l'aveva già
+           aperta e aveva detto «super». Prima di scrivere «primo», si cerca il
+           secondo — e a volte è a tre righe di distanza, di propria mano.
            L'ONDA NON SI SCRIVE PIÙ A MANO: la chiede alla radio (script in fondo).
            L'ORARIO invece È una regola e non un dato: 20.26 ora di Roma, ogni
            sera, si calcola in pagina senza chiedere niente a nessuno.
-           — JUDY 13/09 -->
-      <p class="stato-radio" id="stato"><span class="spia"></span> <span id="stato-onda">in prova</span> &middot; <span id="quando">sto guardando l&rsquo;orario&hellip;</span></p>
+           — JUDY 13/09, aggiornato 14/09 -->
+      <p class="stato-radio" id="stato"><span class="spia"></span> <span id="stato-onda">accesa</span> &middot; <span id="quando">sto guardando l&rsquo;orario&hellip;</span></p>
 
       <p class="occhiello">Musica nostra. Nessun campione di nessuno.<br>
       Va in onda alle <b>20.26</b>, ora di Roma. Fuori orario si sente la replica.</p>
@@ -86,6 +91,27 @@
                src="https://radio-anima.pages.dev/audio/onda-01-diretta.mp3"></audio>
         <p class="riga-mono" id="esito">pronta</p>
       </div>
+
+      <!-- L'ARCHIVIO. Il Direttore, 14/09: «l'onda numero 1 non si può
+           risentire adesso?». Non si poteva — e non perché mancasse il pezzo:
+           `wrangler pages deploy` carica la cartella intera e nessuno script
+           cancella i file vecchi, quindi le onde passate sono ancora sull'host.
+           La prova è il RIPIEGO qui sopra: punta a onda 01 di AGOSTO e funziona
+           tuttora. Mancava il modo di chiederla.
+           Nasce vuoto e si riempie dallo script: se la radio non risponde, qui
+           non compare niente invece di una promessa vuota. — JUDY 14/09 -->
+      <div class="archivio" id="archivio" hidden>
+        <p class="riga-mono">o risenti una replica, dall&rsquo;inizio</p>
+        <div class="onde" id="onde"></div>
+      </div>
+
+      <!-- LA SETTIMANA. Ordine del Direttore del 06/09: «giorni diversi,
+           contenuti diversi». Il palinsesto esiste da allora (SUONO/palinsesti/
+           settimana.json) e non l'aveva mai visto nessuno: si sapeva che alle
+           20.26 c'era qualcosa, non CHE COSA. Si disegna da onda.json, cioè
+           dalla verità della radio, e un giorno non dichiarato dice «non si
+           trasmette» — non si finge. — JUDY 14/09 -->
+      <div class="settimana" id="settimana" hidden></div>
 
     </div>
   </section>
@@ -118,6 +144,24 @@
 .bottone.ciano:hover{filter:brightness(1.08)}
 .ascolto audio{display:none; width:100%; max-width:34rem; margin-top:1rem}
 .ascolto audio.visibile{display:block}
+/* L'ARCHIVIO E LA SETTIMANA — JUDY 14/09. Stessa lingua del resto della casa:
+   mono per le etichette, il ciano SOLO dove si può premere, nessun alone.
+   Minimo 11px ovunque, come chiede lo standard: .74rem sono 11,8px. */
+.archivio{margin:0 0 1.8rem}
+.archivio .riga-mono{margin:0 0 .6rem; color:var(--muto)}
+.onde{display:flex; flex-wrap:wrap; gap:.5rem}
+.onda-vecchia{font-family:var(--mono); font-size:.8rem; letter-spacing:.06em;
+  background:none; color:#16E0DC; border:1px solid var(--linea-viva);
+  border-radius:2px; padding:.5rem .8rem; cursor:pointer}
+.onda-vecchia:hover{border-color:#16E0DC}
+/* lo stato premuto sta in un attributo, non in uno stile in linea: il 13/09
+   uno stile in linea ha battuto :hover su un'altra pagina e la scelta attiva
+   smetteva di vedersi appena ci passavi sopra. — JUDY */
+.onda-vecchia[aria-pressed="true"]{background:#16E0DC; color:#0A0A0A; border-color:#16E0DC}
+.settimana{display:flex; flex-wrap:wrap; gap:.3rem 1.2rem; max-width:52ch;
+  font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; color:var(--muto)}
+.settimana span{white-space:nowrap}
+.settimana .oggi{color:#16E0DC}
 .occhiello.piccolo{font-size:.9rem; color:var(--muto)}
 </style>
 
@@ -148,6 +192,10 @@
   var stato=document.getElementById('stato'), quando=document.getElementById('quando');
   var pronta = 'pronta';   // cosa dice la riga sotto il tasto quando non suona
   var PROGRAMMA = null;    // l'onda di OGGI, quando la radio ce l'ha detta
+  /* Il visitatore ha scelto una replica dall'archivio. Finché è vero, l'orologio
+     NON tocca più la sorgente: senza questa riga, trenta secondi dopo aver scelto
+     l'onda 01 il giro dell'orario gliela cambierebbe sotto le mani. — JUDY 14/09 */
+  var DA_ARCHIVIO = false;
 
   function minutiRoma(){
     var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false});
@@ -168,7 +216,7 @@
      Si cambia file solo se non sta suonando: tagliare l'ascolto a qualcuno
      per aggiornare un indirizzo sarebbe peggio del problema. — JUDY 13/09 */
   function scegliOnda(diretta){
-    if(!PROGRAMMA || !a.paused) return;
+    if(!PROGRAMMA || !a.paused || DA_ARCHIVIO) return;
     var pezzo = diretta ? PROGRAMMA.diretta : (PROGRAMMA.replica || PROGRAMMA.diretta);
     if(!pezzo || !pezzo.file) return;
     var url = CASA_ONDA + PROGRAMMA.base + pezzo.file;
@@ -183,6 +231,79 @@
   }
   dipingiOrario();
   setInterval(dipingiOrario, 30000);
+
+  /* IL NOME CORTO DI UN'ONDA. Il titolo intero è «◉ SYSTEMA 77 RADIO · onda 02
+     — musica di casa»: in pagina serve solo l'ultimo pezzo. Era scritto in
+     linea dentro la fetch; adesso serve in tre punti, quindi ha un nome. */
+  function nomeCorto(titolo, numero){
+    var n = String(titolo || '').split('·').pop().trim();
+    return n || ('onda ' + (numero || '?'));
+  }
+
+  function segnaScelta(scelto){
+    var b = document.querySelectorAll('.onda-vecchia');
+    for(var i=0;i<b.length;i++) b[i].setAttribute('aria-pressed', b[i]===scelto ? 'true' : 'false');
+  }
+
+  /* L'ARCHIVIO — si costruisce da quello che la radio DICHIARA, niente di più:
+     nessun elenco scritto a mano, che invecchierebbe come l'indirizzo del 13/09.
+     ⚠️ SI OFFRONO LE REPLICHE, MAI LE DIRETTE. La diretta è l'appuntamento
+     delle 20.26, e chi entra a metà ha perso la metà: è la dottrina della radio
+     («la scarsità sta in COSA senti, non in QUANDO puoi», orario.js). La replica
+     invece il suo stesso palinsesto la dichiara «versione pubblica, sempre
+     disponibile». Un'onda SENZA replica non entra in archivio: non si promuove
+     una diretta a replica per riempire una riga. — JUDY 14/09 */
+  function costruisciArchivio(settimana, radice){
+    var viste={}, elenco=[], g, v, f;
+    for(g=0; g<7; g++){
+      v = settimana[String(g)];
+      if(!v || !v.replica || !v.replica.file) continue;
+      f = v.replica.file;
+      if(viste[f]) continue;               // sette giorni, ma le onde si ripetono
+      viste[f] = 1;
+      elenco.push({ file:f, nome:nomeCorto(v.titolo, v.onda) });
+    }
+    if(!elenco.length) return;             // niente repliche: niente archivio, e niente promesse
+    var dove = document.getElementById('onde');
+    elenco.forEach(function(o){
+      var b = document.createElement('button');
+      b.type='button'; b.className='onda-vecchia'; b.textContent=o.nome;
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click', function(){ suonaReplica(radice + o.file, b, o.nome); });
+      dove.appendChild(b);
+    });
+    document.getElementById('archivio').hidden = false;
+  }
+
+  function suonaReplica(url, bottone, nome){
+    DA_ARCHIVIO = true;
+    if(a.src !== url) a.src = url;
+    segnaScelta(bottone);
+    pronta = nome + ' · replica';
+    a.classList.add('visibile'); a.controls = true;
+    var p = a.play();
+    if(p && p.catch) p.catch(function(){
+      e.textContent = 'il browser non lascia partire l’audio — usa i comandi qui sotto'; });
+  }
+
+  /* LA SETTIMANA — ordine del Direttore del 06/09: «giorni diversi, contenuti
+     diversi». Il palinsesto esisteva da allora e non lo vedeva nessuno.
+     Un giorno non dichiarato dice «non si trasmette», ed è la regola scritta
+     in settimana.json: «UN GIORNO SENZA TRASMISSIONE SI TOGLIE, NON SI FINGE».
+     — JUDY 14/09 */
+  var NOMI_GIORNI = ['dom','lun','mar','mer','gio','ven','sab'];
+  function dipingiSettimana(settimana){
+    var dove = document.getElementById('settimana'), oggi = giornoRoma(), g, v, s;
+    for(g=0; g<7; g++){
+      v = settimana[String(g)];
+      s = document.createElement('span');
+      if(g === oggi) s.className = 'oggi';
+      s.textContent = NOMI_GIORNI[g] + ' · ' +
+        (v && v.diretta && v.diretta.file ? nomeCorto(v.titolo, v.onda) : 'non si trasmette');
+      dove.appendChild(s);
+    }
+    dove.hidden = false;
+  }
 
   /* LA VETRINA SEGUE LA RADIO, non la fotografa.
      Il 13/09 il Direttore, in macchina, sentiva UN pezzo solo da qui mentre dal
@@ -222,12 +343,19 @@
       /* il titolo e' «◉ SYSTEMA 77 RADIO · onda 02 — musica di casa»: qui
          serve solo l'ultimo pezzo. Prima una regex ne toglieva uno solo e
          lasciava in pagina il nome della stazione due volte. */
-      var nome = String(oggi.titolo || o.titolo || '').split('\u00b7').pop().trim()
-                 || ('onda ' + (oggi.onda || o.onda || ''));
-      document.getElementById('stato-onda').textContent = 'in prova \u00b7 ' + nome;
+      var nome = nomeCorto(oggi.titolo || o.titolo, oggi.onda || o.onda);
+      PROGRAMMA.nome = nome;   // serve per tornare indietro dall'archivio
+      document.getElementById('stato-onda').textContent = 'accesa \u00b7 ' + nome;
       pronta = nome + ' \u00b7 pronta';
       if(a.paused) e.textContent = pronta;
       dipingiOrario();   // mette la sorgente giusta: diretta o replica
+      /* L'archivio e la settimana esistono SOLO se la radio ha una settimana.
+         Col ripiego piatto non c'\u00e8 n\u00e9 palinsesto n\u00e9 storia, e non si inventano:
+         restano nascosti, e la pagina fa quello che faceva ieri. \u2014 JUDY 14/09 */
+      if(o.settimana){
+        costruisciArchivio(o.settimana, CASA_ONDA + (o.base || ''));
+        dipingiSettimana(o.settimana);
+      }
     })
     .catch(function(){
       e.textContent = 'non ho potuto chiedere alla radio quale onda \u00e8 in corso: senti l\u2019ultima che conosco';
@@ -235,6 +363,15 @@
 
   t.addEventListener('click', function(){
     a.classList.add('visibile'); a.controls=true;
+    /* Se si stava ascoltando una replica dall'archivio, questo tasto vuol dire
+       \u00abriportami all'onda di oggi\u00bb: \u00e8 il suo mestiere, e lasciarlo ambiguo
+       costringerebbe a premerlo due volte per capire cosa fa. \u2014 JUDY 14/09 */
+    if(DA_ARCHIVIO){
+      DA_ARCHIVIO = false; segnaScelta(null);
+      a.pause();                             // in pausa, cos\u00ec scegliOnda pu\u00f2 cambiare sorgente
+      dipingiOrario();                       // e rimette l'onda di oggi, diretta o replica
+      if(PROGRAMMA && PROGRAMMA.nome) pronta = PROGRAMMA.nome + ' \u00b7 pronta';
+    }
     if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){
       e.textContent='il browser non lascia partire l\u2019audio \u2014 usa i comandi qui sotto'; }); }
     else a.pause();
