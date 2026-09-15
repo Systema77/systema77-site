@@ -47,9 +47,11 @@ accesa deve diventare verde (o è un controllo sempre rosso, che non misura
 niente), con la macchina spenta deve **rifiutare** (o non morde). Se una delle
 due non si comporta come deve, si dichiara inaffidabile ed esce rosso.
 
-⚠️ Non è ancora dentro `galassia.mjs`: oggi troverebbe due righe di
-`animagame-site`, e farebbe rosso il CI di questa casa per una cosa che si
-ripara in un'altra. Si aggancia al giro quando quelle due sono chiuse.
+✅ **Dal 15/09 è la sezione 4 del giro.** Restava fuori finché trovava due
+righe di `animagame-site`: farne rosso il CI di questa casa per una cosa da
+riparare in un'altra sarebbe stato scorretto. Quelle due sono chiuse — le
+stanze del gioco ora si accendono da `config.js` — quindi il giro chiede
+anche all'interruttore, e non può più essere verde su una bugia.
 
 ## Se tocchi uno stato che vive anche altrove
 

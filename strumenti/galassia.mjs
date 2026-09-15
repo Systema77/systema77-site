@@ -195,6 +195,21 @@ for (const [nome, s] of Object.entries(REG.stati)) {
 
 /* ═══ il verdetto ══════════════════════════════════════════════════════ */
 console.log();
+/* ═══ 4 · E LA MACCHINA CONFERMA? ═══════════════════════════════════════
+   Le tre sezioni qui sopra confrontano le case FRA LORO e col registro. Il
+   15/09 si è visto il limite: pagina, registro e giro dicevano tutti
+   «verifiche: attiva» mentre `assets/config.js` diceva `ACCESE: false`.
+   📜 Un giro che confronta la pagina col registro è verde quando mentono
+      insieme. Da qui in poi il giro chiede anche all'interruttore. */
+titolo('4 · la macchina conferma?');
+{
+  const r = spawnSync(process.execPath, [join(QUI, 'strumenti/verita.mjs')],
+                      { encoding: 'utf8' });
+  const righe = (r.stdout || '').split('\n').filter((x) => /✗|✓/.test(x));
+  for (const riga of righe) console.log(`  ${riga.trim()}`);
+  if (r.status !== 0) { guai++; }
+}
+
 if (guai) {
   console.log(`${G.rosso}${G.forte}✗ ${guai} ${guai === 1 ? 'cosa' : 'cose'} da sistemare nella galassia.${G.fine}\n`);
   process.exit(1);

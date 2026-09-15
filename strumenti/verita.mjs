@@ -92,6 +92,29 @@ function interruttore(sorgente, chiave) {
 
 const BADGE = /<(h2|h3)[^>]*>([^<]{2,60})<\/\1>\s*<span class="stato([^"]*)"[^>]*>([^<]*)<\/span>/g;
 
+/* ── UN BADGE GOVERNATO NON È UNA PROMESSA, È UN MODELLO ──────────────────
+   Dal 15/09 le stanze stanno dentro un `<article|section data-macchina="…"
+   hidden>`: il testo «attiva» esiste nel sorgente ma si vede SOLO se
+   `assets/stanze.js` lo scopre, e lo scopre solo se l'interruttore è true.
+   Quel testo quindi non mente — è la frase che la stanza dirà quando sarà
+   vera. Qui si riconosce quel caso, e si tiene il dente per gli altri.
+   ⚠️ `hidden` da solo non basta: un `display:` nel foglio lo batte (misurato
+   in un browser vero il 15/09 — le tre card di gioco.html restavano visibili
+   con hidden messo). Per questo la pagina deve ANCHE portare la regola CSS
+   che lo rende vincolante, e qui sotto si controlla che ci sia. */
+const CONTENITORE = /<(article|section)\b[^>]*>/g;
+function governato(html, dove) {
+  let ultimo = null;
+  CONTENITORE.lastIndex = 0;
+  for (const c of html.matchAll(CONTENITORE)) {
+    if (c.index > dove) break;
+    ultimo = c[0];
+  }
+  if (!ultimo || !/data-macchina=/.test(ultimo)) return null;
+  return { hidden: /\bhidden\b/.test(ultimo), chiave: /data-macchina="([^"]+)"/.exec(ultimo)?.[1] };
+}
+const REGOLA_CSS = /\[data-macchina\]\[hidden\]\s*\{[^}]*display\s*:\s*none\s*!important/;
+
 /* Il controllo vero e proprio. Prende i testi in ingresso invece di leggerli
    da sé, così le prove di sé stesso possono passargli copie modificate senza
    toccare un solo file su disco. */
@@ -110,6 +133,13 @@ function controlla({ config, pagine, registro }) {
         const parola = m[4].trim();
         // «attiva altrove» dichiara di vivere fuori: non la regge questa macchina
         if (parola !== 'attiva') continue;
+        const g = governato(html, m.index);
+        if (g) {
+          // il badge lo scopre la macchina: si controlla il GOVERNO, non la parola
+          if (!g.hidden) detto(`${file}: «${nome}» è legata a ${g.chiave} ma NON è hidden: si vede comunque`);
+          else if (!REGOLA_CSS.test(html)) detto(`${file}: «${nome}» è hidden ma manca la regola CSS [data-macchina][hidden]{display:none!important} — un display del foglio la batte`);
+          continue;
+        }
         if (!acceso) detto(`${file} dice «${nome} · attiva» ma ${chiave} è ${i.valore}`);
       }
     }
