@@ -186,7 +186,19 @@
      quel file non serviva mai: serviva per il titolo della traccia, e le onde
      oggi sono una. Quando saranno molte il titolo si genera in pagina, non si
      va a chiederlo. — JUDY 13/09                                           */
-  var ORA = 20, MIN = 26, FINESTRA = 15;
+  var ORA = 20, MIN = 26;
+  /* ⚠️ 2026-09-15 — LA FINESTRA NON È 15 MINUTI: È LUNGA QUANTO L'ONDA.
+     Qui c'era `FINESTRA = 15`, minuti fissi. Ma le onde durano quanto durano:
+     onda 01 è 392,18 s (6′32″) e onda 03 è 760,27 s (12′40″) — misurati nei
+     file di scaletta di SUONO, non dedotti. Con la costante, in un giorno di
+     onda 01 questa pagina diceva «in diretta adesso» dalle 20:32:32 alle
+     20:41: otto minuti e mezzo di spia che pulsa su una trasmissione finita,
+     e `scegliOnda` che intanto serviva ancora il file della diretta.
+     La durata vera la dichiara la radio in onda.json (`durata_s`, scritta da
+     SUONO/motore/onda.py). Se non la dichiara si torna ai 15 minuti: si
+     degrada, non si rompe. — JUDY 15/09 */
+  var FINESTRA_RIPIEGO = 15 * 60;   // secondi, SOLO se la radio non dichiara la durata
+  var DERIVA_MAX = 3;               // secondi tollerati di scarto al risveglio della scheda
 
   var t=document.getElementById('tasto'), a=document.getElementById('onda'), e=document.getElementById('esito');
   var stato=document.getElementById('stato'), quando=document.getElementById('quando');
@@ -197,11 +209,28 @@
      l'onda 01 il giro dell'orario gliela cambierebbe sotto le mani. — JUDY 14/09 */
   var DA_ARCHIVIO = false;
 
-  function minutiRoma(){
-    var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',hour12:false});
-    var h=0,m=0;
-    f.formatToParts(new Date()).forEach(function(x){ if(x.type==='hour')h=+x.value; if(x.type==='minute')m=+x.value; });
-    return h*60+m;
+  /* ── L'OROLOGIO FINTO, per provare l'appuntamento a qualunque ora ───────
+     `?finta=20:29` fa credere alla pagina che siano le 20:29. Serve a
+     verificare di persona che entrando a metà si entri DAVVERO a metà, senza
+     aspettare le otto e mezza di sera. Non è una scorciatoia nascosta: è
+     scritta qui, e chiunque può controllare che l'orologio dica il vero.
+     Viene dalla macchina di SQUELCH (SQUELCH/radio-player/orario.js), dove
+     esiste dal 10/08 e dove nessuno di questa pagina era andato a prenderla.
+     — JUDY 15/09 */
+  function oraFinta(){
+    var m = /[?&]finta=(\d{1,2})[:.](\d{2})/.exec(location.search);
+    return m ? (parseInt(m[1],10)*3600 + parseInt(m[2],10)*60) : null;
+  }
+
+  /* l'ora di Roma in SECONDI dalla mezzanotte. Era in minuti — e in minuti
+     non si può dire a che PUNTO dell'onda siamo, che è tutto il problema. */
+  function secondiRoma(){
+    var f0 = oraFinta();
+    if(f0 !== null) return f0;
+    var f=new Intl.DateTimeFormat('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    var h=0,m=0,s=0;
+    f.formatToParts(new Date()).forEach(function(x){ if(x.type==='hour')h=+x.value; if(x.type==='minute')m=+x.value; if(x.type==='second')s=+x.value; });
+    return (h%24)*3600 + m*60 + s;   // a mezzanotte certi motori dicono 24 invece di 0
   }
   /* il GIORNO di Roma, accanto all'ora di Roma: il palinsesto della radio e'
      settimanale, e il giorno del visitatore non c'entra niente. A mezzanotte
@@ -223,14 +252,118 @@
     if(a.src !== url) a.src = url;
   }
 
+  /* DOVE SIAMO NELL'ONDA: se è diretta, e da che secondo si entra. — JUDY 15/09 */
+  function statoOnda(){
+    var durata = (PROGRAMMA && PROGRAMMA.diretta && +PROGRAMMA.diretta.durata_s) || FINESTRA_RIPIEGO;
+    var inizio = (ORA*60+MIN)*60, adesso = secondiRoma();
+    if(adesso >= inizio && adesso < inizio + durata)
+      return { diretta:true, offset: adesso - inizio, durata: durata };
+    return { diretta:false, offset:0, durata: durata };
+  }
+
   function dipingiOrario(){
-    var inizio=ORA*60+MIN, adesso=minutiRoma(), diretta=(adesso>=inizio && adesso<inizio+FINESTRA);
-    stato.classList.toggle('diretta', diretta);
-    quando.textContent = diretta ? 'in diretta adesso' : 'in replica';
-    scegliOnda(diretta);
+    var s = statoOnda();
+    stato.classList.toggle('diretta', s.diretta);
+    quando.textContent = s.diretta ? 'in diretta adesso' : 'in replica';
+    scegliOnda(s.diretta);
   }
   dipingiOrario();
   setInterval(dipingiOrario, 30000);
+
+  /* ── ENTRARE A METÀ ONDA — quello che questa pagina PROMETTE e non faceva ─
+     Poco più su la pagina stampa la dottrina della radio: chi entra a metà ha
+     perso la metà. Non era vero: alle 20:30 l'onda partiva da 0:00, e non se
+     ne accorgeva nessuno perché la barra diceva comunque «in diretta adesso».
+     Le trappole qui sotto sono già state pagate una volta, dalla macchina di
+     SQUELCH (SQUELCH/radio-player/radio-player.js, guasto del 05/09): qui non
+     si riscoprono, si portano dentro. — JUDY 15/09 */
+  var SALTO = 0;    // secondi da cui entrare appena arrivano i metadati; 0 = nessun salto
+  var AVVISO = '';  // se il salto si rivela impossibile, cosa dire invece di «sta suonando»
+
+  /* ── LA RIGA SOTTO IL TASTO, IN UN POSTO SOLO ────────────────────────────
+     Era scritta da tre punti che non si parlavano, e bastava cambiare uno
+     stato senza passare da un evento per lasciarla ferma su una frase vecchia.
+     È così che un avviso vero («non si entra a metà») sopravviveva fino a una
+     replica, che dall'inizio ci parte apposta, e lì diventava falso. Adesso
+     la riga si calcola dallo stato, e lo stato è uno. — JUDY 15/09 */
+  function diciSotto(){
+    if(AVVISO){ e.textContent = AVVISO; return; }   // un avviso batte tutto: è la cosa meno ovvia
+    e.textContent = a.paused ? pronta : 'sta suonando';
+  }
+
+  function parti(){
+    var p = a.play();
+    if(p && p.catch) p.catch(function(err){
+      /* AbortError = un salto ha interrotto QUESTO play, e un altro parte
+         subito dopo `seeked`. Non è un guasto, e dirlo sarebbe falso. */
+      if(err && err.name === 'AbortError') return;
+      e.textContent = 'il browser non lascia partire l\u2019audio \u2014 usa i comandi qui sotto';
+    });
+  }
+
+  function vaiA(secondi, giaRiprovato){
+    if(!a.duration || !isFinite(a.duration)) return;
+    var riprendi = !a.paused;
+    if(riprendi) a.pause();          // saltare mentre suona interrompe il play
+    a.addEventListener('seeked', function(){
+      /* 🔴 SE L'HOST NON SERVE RICHIESTE PARZIALI, IL SALTO NON DÀ ERRORE:
+         viene ignorato e l'onda riparte da zero. È la trappola di Safari, ma
+         lato rete. SQUELCH lo dichiara di Cloudflare Pages in radio-player.js
+         («non serve richieste parziali e il salto è lento»); da una sessione
+         remota quell'host non si raggiunge, quindi questa pagina non gli crede
+         e non lo smentisce: GUARDA DOVE È ATTERRATA. Se non è dove voleva,
+         riprova una volta sola, a file scaricato, con l'orario RICALCOLATO —
+         nel frattempo l'onda è andata avanti. — JUDY 15/09 */
+      if(Math.abs(a.currentTime - secondi) <= DERIVA_MAX){ AVVISO = ''; }
+      else if(!giaRiprovato && a.readyState < 4){
+        /* il file non è ancora tutto in casa: si riprova una volta sola quando
+           lo è, con l'orario RICALCOLATO — nel frattempo l'onda va avanti. */
+        a.addEventListener('canplaythrough', function(){
+          var s = statoOnda();
+          if(!DA_ARCHIVIO && s.diretta && s.offset > 0) vaiA(s.offset, true);
+        }, {once:true});
+      }
+      else {
+        /* ⚠️ MISURATO IL 15/09, e smentisce quello che credevamo.
+           Se l'host non serve richieste parziali, il salto non è LENTO: è
+           IMPOSSIBILE. Il browser considera il file non saltabile e ignora
+           currentTime anche a file interamente scaricato — provato con un
+           servitore che rifiuta le parziali (strumenti/prova-onda.mjs, caso 3).
+           SQUELCH lo dice di Cloudflare Pages in radio-player.js: «non serve
+           richieste parziali e il salto è lento». La prima metà è la stessa;
+           la seconda no, e la differenza cambia cosa si può promettere.
+           Quindi non si riprova all'infinito e non si finge di essere entrati
+           a metà: si dice a chi ascolta da dove sta partendo davvero. */
+        AVVISO = 'l\u2019onda riparte dall\u2019inizio: da qui non si entra a met\u00e0';
+        diciSotto();
+      }
+      if(riprendi) parti();
+    }, {once:true});
+    a.currentTime = Math.min(secondi, a.duration - 1);
+  }
+
+  /* 🔴 LA TRAPPOLA DI SAFARI: scrivere currentTime PRIMA che i metadati ci
+     siano non dà errore — viene ignorato, e l'onda riparte da zero senza che
+     nessuno se ne accorga. Il salto va fatto QUI. E si RICALCOLA adesso invece
+     di riusare il numero di prima: fra il click e i metadati passa un giro di
+     rete, e in quel giro l'onda è andata avanti. */
+  a.addEventListener('loadedmetadata', function(){
+    if(!SALTO) return;
+    SALTO = 0;
+    var s = statoOnda();
+    if(!DA_ARCHIVIO && s.diretta && s.offset > 0) vaiA(s.offset);
+  });
+
+  /* 🔴 La scheda in secondo piano si addormenta: torni dopo dieci minuti e la
+     radio è indietro di dieci. Senza questo l'orario è finto, e si sente.
+     La replica scelta dall'archivio non si tocca: quella si ascolta dall'inizio. */
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden || a.paused || DA_ARCHIVIO) return;
+    var s = statoOnda();
+    if(!s.diretta || !a.duration || !isFinite(a.duration)) return;
+    if(Math.abs(a.currentTime - s.offset) > DERIVA_MAX)
+      a.currentTime = Math.min(s.offset, a.duration - 1);
+  });
 
   /* IL NOME CORTO DI UN'ONDA. Il titolo intero è «◉ SYSTEMA 77 RADIO · onda 02
      — musica di casa»: in pagina serve solo l'ultimo pezzo. Era scritto in
@@ -277,13 +410,18 @@
 
   function suonaReplica(url, bottone, nome){
     DA_ARCHIVIO = true;
+    /* una replica si ascolta dall'inizio per dottrina: se un salto fallito
+       aveva acceso l'avviso, qui non descrive piu' niente. — JUDY 15/09 */
+    AVVISO = '';
     if(a.src !== url) a.src = url;
     segnaScelta(bottone);
     pronta = nome + ' · replica';
     a.classList.add('visibile'); a.controls = true;
-    var p = a.play();
-    if(p && p.catch) p.catch(function(){
-      e.textContent = 'il browser non lascia partire l’audio — usa i comandi qui sotto'; });
+    parti();
+    /* la riga va riscritta ANCHE quando la sorgente non cambia: stessa replica
+       gia' in ascolto = nessun evento `playing`, e senza questa chiamata la
+       riga resterebbe su quello che diceva prima. — JUDY 15/09 */
+    diciSotto();
   }
 
   /* LA SETTIMANA — ordine del Direttore del 06/09: «giorni diversi, contenuti
@@ -372,15 +510,30 @@
       dipingiOrario();                       // e rimette l'onda di oggi, diretta o replica
       if(PROGRAMMA && PROGRAMMA.nome) pronta = PROGRAMMA.nome + ' \u00b7 pronta';
     }
-    if(a.paused){ var p=a.play(); if(p&&p.catch) p.catch(function(){
-      e.textContent='il browser non lascia partire l\u2019audio \u2014 usa i comandi qui sotto'; }); }
+    if(a.paused){
+      /* DA DOVE ENTRARE. Se è l'ora, dal punto in cui l'onda è arrivata. Se i
+         metadati ci sono già (si riprende dopo una pausa) si salta adesso;
+         se no si arma il salto per `loadedmetadata`. — JUDY 15/09 */
+      var s = statoOnda();
+      if(!DA_ARCHIVIO && s.diretta && s.offset > 0){
+        if(a.readyState >= 1) vaiA(s.offset); else SALTO = s.offset;
+      }
+      /* qui si parte dall'inizio APPOSTA — replica, o diretta presa al secondo
+         zero — quindi un avviso rimasto acceso da un salto fallito prima non
+         c'entra piu' niente e direbbe il falso. Si spegne. — JUDY 15/09 */
+      else AVVISO = '';
+      parti();
+    }
     else a.pause();
   });
-  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa'; e.textContent='sta suonando'; });
+  a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa';
+    /* se il salto si e' rivelato impossibile, la riga sotto il tasto dice
+       QUELLO, non «sta suonando»: suona davvero, ma non da dove si crede. */
+    diciSotto(); });
   /* in pausa la riga sotto il tasto restava a «sta suonando», che era falso
      appena smetteva di suonare: torna a dire quale onda è pronta. — JUDY 13/09 */
   a.addEventListener('pause',  function(){ t.innerHTML='\u25B6&ensp;Ascolta l\u2019onda';
-    e.textContent = pronta; });
+    diciSotto(); });
   a.addEventListener('error',  function(){
     t.disabled=true; t.innerHTML='onda non raggiungibile';
     e.textContent='il file dell\u2019onda non risponde: lo diciamo invece di far finta'; });
