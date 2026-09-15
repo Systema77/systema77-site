@@ -207,7 +207,7 @@ const b = cdp(vers.webSocketDebuggerUrl); await b.pronto;
 
 /* Apre la pagina all'ora che diciamo noi, con la radio finta al posto di
    quella vera, preme il tasto e riporta cosa ha misurato. */
-async function apri({ pagina, finta, durata, parziali = true }) {
+async function apri({ pagina, finta, durata, parziali = true, archivio = false }) {
   DURATA = durata; PARZIALI = parziali;
   const { targetId } = await b.manda('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.manda('Target.attachToTarget', { targetId, flatten: true });
@@ -222,7 +222,8 @@ async function apri({ pagina, finta, durata, parziali = true }) {
       /* la forma vera di onda.json: `settimana` con le chiavi 0..6, e la
          `durata_s` che fino a oggi questa pagina non guardava. */
       const giorno = { titolo: '◉ SYSTEMA 77 RADIO · onda di prova',
-        onda: 99, diretta: { file: 'prova.wav', durata_s: durata } };
+        onda: 99, diretta: { file: 'prova.wav', durata_s: durata },
+        replica: { file: 'prova.wav', durata_s: durata } };
       const corpo = JSON.stringify({ stazione: '◉ SYSTEMA 77 RADIO', base: '',
         settimana: { 0: giorno, 1: giorno, 2: giorno, 3: giorno, 4: giorno, 5: giorno, 6: giorno } });
       return b.manda('Fetch.fulfillRequest', { requestId: p.requestId, responseCode: 200,
@@ -278,6 +279,15 @@ async function apri({ pagina, finta, durata, parziali = true }) {
       eventi: await guarda('(window.__ev||[]).join(" > ")'),
     }));
   }
+  if (archivio) {
+    await guarda('document.querySelector(".onda-vecchia").click(), 1');
+    for (let i = 0; i < 100; i++) {
+      if (await guarda('(function(){var a=document.getElementById("onda");return !a.paused && !a.seeking;})()')) break;
+      await dormi(100);
+    }
+    await dormi(400);
+  }
+
   const esito = {
     da: await guarda('document.getElementById("onda").currentTime'),
     quando: await guarda('document.getElementById("quando").textContent'),
@@ -338,6 +348,21 @@ titolo('3 · l\u2019host non serve richieste parziali');
   if (scarto <= 8) ok(`anche senza parziali entra a ${Math.round(vero.da)}s`);
   else if (/riparte dall/.test(vero.esito || '')) ok(`non puo\u0300 saltare e LO DICE: «${vero.esito}»`);
   else male(`parte da ${Math.round(vero.da ?? -1)}s e dice «${vero.esito}» — il salto si perde in silenzio`);
+}
+
+titolo('4 · l’avviso non sopravvive a chi lo smentisce');
+{
+  /* Trovato rileggendo il proprio diff, non da un guasto in pagina. Se il salto
+     si è rivelato impossibile l'avviso resta acceso — e poi l'ascoltatore
+     sceglie una REPLICA dall'archivio, che per dottrina parte dall'inizio. La
+     pagina gli direbbe «da qui non si entra a metà» davanti a una cosa che
+     dall'inizio ci parte apposta: una frase falsa, della stessa famiglia di
+     tutte le altre riparate qui. */
+  const vero = await apri({ pagina: 'radio.html', finta: '20:30', durata: 900,
+                            parziali: false, archivio: true });
+  if (/non si entra a met/.test(vero.esito || ''))
+    male(`sulla replica dice ancora «${vero.esito}» — un avviso acceso che ormai mente`);
+  else ok(`sulla replica l'avviso è spento: «${vero.esito}»`);
 }
 
 /* ── la fine ──────────────────────────────────────────────────────────── */

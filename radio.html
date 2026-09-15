@@ -280,6 +280,17 @@
   var SALTO = 0;    // secondi da cui entrare appena arrivano i metadati; 0 = nessun salto
   var AVVISO = '';  // se il salto si rivela impossibile, cosa dire invece di «sta suonando»
 
+  /* ── LA RIGA SOTTO IL TASTO, IN UN POSTO SOLO ────────────────────────────
+     Era scritta da tre punti che non si parlavano, e bastava cambiare uno
+     stato senza passare da un evento per lasciarla ferma su una frase vecchia.
+     È così che un avviso vero («non si entra a metà») sopravviveva fino a una
+     replica, che dall'inizio ci parte apposta, e lì diventava falso. Adesso
+     la riga si calcola dallo stato, e lo stato è uno. — JUDY 15/09 */
+  function diciSotto(){
+    if(AVVISO){ e.textContent = AVVISO; return; }   // un avviso batte tutto: è la cosa meno ovvia
+    e.textContent = a.paused ? pronta : 'sta suonando';
+  }
+
   function parti(){
     var p = a.play();
     if(p && p.catch) p.catch(function(err){
@@ -324,7 +335,7 @@
            Quindi non si riprova all'infinito e non si finge di essere entrati
            a metà: si dice a chi ascolta da dove sta partendo davvero. */
         AVVISO = 'l\u2019onda riparte dall\u2019inizio: da qui non si entra a met\u00e0';
-        e.textContent = AVVISO;
+        diciSotto();
       }
       if(riprendi) parti();
     }, {once:true});
@@ -399,11 +410,18 @@
 
   function suonaReplica(url, bottone, nome){
     DA_ARCHIVIO = true;
+    /* una replica si ascolta dall'inizio per dottrina: se un salto fallito
+       aveva acceso l'avviso, qui non descrive piu' niente. — JUDY 15/09 */
+    AVVISO = '';
     if(a.src !== url) a.src = url;
     segnaScelta(bottone);
     pronta = nome + ' · replica';
     a.classList.add('visibile'); a.controls = true;
     parti();
+    /* la riga va riscritta ANCHE quando la sorgente non cambia: stessa replica
+       gia' in ascolto = nessun evento `playing`, e senza questa chiamata la
+       riga resterebbe su quello che diceva prima. — JUDY 15/09 */
+    diciSotto();
   }
 
   /* LA SETTIMANA — ordine del Direttore del 06/09: «giorni diversi, contenuti
@@ -500,6 +518,10 @@
       if(!DA_ARCHIVIO && s.diretta && s.offset > 0){
         if(a.readyState >= 1) vaiA(s.offset); else SALTO = s.offset;
       }
+      /* qui si parte dall'inizio APPOSTA — replica, o diretta presa al secondo
+         zero — quindi un avviso rimasto acceso da un salto fallito prima non
+         c'entra piu' niente e direbbe il falso. Si spegne. — JUDY 15/09 */
+      else AVVISO = '';
       parti();
     }
     else a.pause();
@@ -507,11 +529,11 @@
   a.addEventListener('playing',function(){ t.innerHTML='\u275A\u275A&ensp;Pausa';
     /* se il salto si e' rivelato impossibile, la riga sotto il tasto dice
        QUELLO, non «sta suonando»: suona davvero, ma non da dove si crede. */
-    e.textContent = AVVISO || 'sta suonando'; });
+    diciSotto(); });
   /* in pausa la riga sotto il tasto restava a «sta suonando», che era falso
      appena smetteva di suonare: torna a dire quale onda è pronta. — JUDY 13/09 */
   a.addEventListener('pause',  function(){ t.innerHTML='\u25B6&ensp;Ascolta l\u2019onda';
-    e.textContent = pronta; });
+    diciSotto(); });
   a.addEventListener('error',  function(){
     t.disabled=true; t.innerHTML='onda non raggiungibile';
     e.textContent='il file dell\u2019onda non risponde: lo diciamo invece di far finta'; });
