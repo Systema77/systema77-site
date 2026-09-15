@@ -26,6 +26,31 @@ Quella sezione esiste perché quel passo è mancato quattro volte in un mese,
 e ogni volta il sito ha raccontato a degli sconosciuti una cosa che non era
 vera.
 
+## Se tocchi uno stato dichiarato (acceso, attivo, in prova…)
+
+```
+node strumenti/verita.mjs
+```
+
+Il giro chiede «le case dicono la stessa cosa?». Questo chiede **«la macchina
+conferma?»** — legge l'interruttore vero (`animagame-site/assets/config.js`),
+non quello che promettiamo.
+
+Esiste per un buco che il giro non poteva vedere: il 15/09 la pagina diceva
+«La stanza delle verifiche · attiva», il registro diceva `verifiche: attiva`,
+e la macchina diceva `ACCESE: false` con `BACKEND_URL: null`. Tre voci
+d'accordo, due false, giro **verde**.
+📜 *Un giro che confronta la pagina col registro è verde quando mentono insieme.*
+
+Si prova vivo da solo, in due sensi — e servono tutti e due: con la macchina
+accesa deve diventare verde (o è un controllo sempre rosso, che non misura
+niente), con la macchina spenta deve **rifiutare** (o non morde). Se una delle
+due non si comporta come deve, si dichiara inaffidabile ed esce rosso.
+
+⚠️ Non è ancora dentro `galassia.mjs`: oggi troverebbe due righe di
+`animagame-site`, e farebbe rosso il CI di questa casa per una cosa che si
+ripara in un'altra. Si aggancia al giro quando quelle due sono chiuse.
+
 ## Se tocchi uno stato che vive anche altrove
 
 ```
