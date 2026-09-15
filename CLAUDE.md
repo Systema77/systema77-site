@@ -47,12 +47,13 @@ accesa deve diventare verde (o è un controllo sempre rosso, che non misura
 niente), con la macchina spenta deve **rifiutare** (o non morde). Se una delle
 due non si comporta come deve, si dichiara inaffidabile ed esce rosso.
 
-⚠️ **Non è ancora dentro `galassia.mjs`, e c'è un ordine da rispettare.**
-Il CI clona le altre case da **main**: finché `animagame-site/main` non porta
-le stanze legate a `config.js` (PR animagame-site #14), agganciare questo
-controllo al giro farebbe rosso il CI di QUESTA casa per una cosa da riparare
-in un'altra. Provato, non dedotto: con `animagame` a main, `verita.mjs` esce 1.
-L'aggancio è pronto e aspetta il suo turno — vedi la PR che lo porta.
+✅ **È la sezione 4 del giro.** Da qui in poi il giro non chiede solo «le case
+dicono la stessa cosa?», chiede anche «la macchina conferma?» — e non può più
+essere verde su una bugia.
+⚠️ L'ordine conta e l'ho pagato: il CI clona le altre case da **main**, quindi
+questo aggancio vale solo dopo che `animagame-site/main` porta le stanze legate
+a `config.js`. Agganciarlo prima fa rosso il CI di QUESTA casa per una cosa da
+riparare in un'altra.
 
 ## Se tocchi uno stato che vive anche altrove
 
