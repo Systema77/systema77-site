@@ -26,6 +26,35 @@ Quella sezione esiste perché quel passo è mancato quattro volte in un mese,
 e ogni volta il sito ha raccontato a degli sconosciuti una cosa che non era
 vera.
 
+## Se tocchi uno stato dichiarato (acceso, attivo, in prova…)
+
+```
+node strumenti/verita.mjs
+```
+
+Il giro chiede «le case dicono la stessa cosa?». Questo chiede **«la macchina
+conferma?»** — legge l'interruttore vero (`animagame-site/assets/config.js`),
+non quello che promettiamo.
+
+Esiste per un buco che il giro non poteva vedere: il 15/09 la pagina diceva
+«La stanza delle verifiche · attiva», il registro diceva `verifiche: attiva`,
+e la macchina diceva `ACCESE: false` con `BACKEND_URL: null`. Tre voci
+d'accordo, due false, giro **verde**.
+📜 *Un giro che confronta la pagina col registro è verde quando mentono insieme.*
+
+Si prova vivo da solo, in due sensi — e servono tutti e due: con la macchina
+accesa deve diventare verde (o è un controllo sempre rosso, che non misura
+niente), con la macchina spenta deve **rifiutare** (o non morde). Se una delle
+due non si comporta come deve, si dichiara inaffidabile ed esce rosso.
+
+✅ **È la sezione 4 del giro.** Da qui in poi il giro non chiede solo «le case
+dicono la stessa cosa?», chiede anche «la macchina conferma?» — e non può più
+essere verde su una bugia.
+⚠️ L'ordine conta e l'ho pagato: il CI clona le altre case da **main**, quindi
+questo aggancio vale solo dopo che `animagame-site/main` porta le stanze legate
+a `config.js`. Agganciarlo prima fa rosso il CI di QUESTA casa per una cosa da
+riparare in un'altra.
+
 ## Se tocchi uno stato che vive anche altrove
 
 ```
