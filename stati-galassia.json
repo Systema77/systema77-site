@@ -1,28 +1,72 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
   "aggiornato": "2026-09-14",
-
   "case": {
     "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
-    "systema77.com":         { "repo": "systema77-site",        "voce": "l'agenzia, il centro",          "colore": "#F2E205", "guardiano": "strumenti/collaudo.mjs" },
-    "animagame.io":          { "repo": "animagame-site",        "voce": "il gioco, a invito",             "colore": "#38E08A", "guardiano": "strumenti/collaudo.mjs" },
-    "cyberboomer.ninja":     { "repo": "cyberboomer-ninja-site","voce": "la divulgazione, l'archivio",    "colore": "#5C7CFF", "guardiano": "strumenti/collaudo.mjs" },
-    "anima.solar":           { "repo": "anima-solar-site",      "voce": "una landing: in sviluppo",       "colore": "#C9A15E", "guardiano": null },
-    "radio-anima.pages.dev": { "repo": null,                    "voce": "la radio, accesa dal 14/09: sorgente fuori da git",  "colore": null,   "guardiano": null },
-    "systema77.studio":      { "repo": "systema77-studio-site", "voce": "la casa di produzione: immagini, film, suono — pellicola e nastro + AI", "colore": null, "guardiano": "strumenti/collaudo.mjs",
-                               "stato": "in allestimento", "dal": "2026-09-08",
-                               "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2). Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio. Il nome è `.studio` dal 10/09 perché `.film` non era disponibile al registrar (bacheca 10/09 16:18) — e infatti `systema77.film` non risolve, misurato il 13/09. Il dominio è stato comprato dal Direttore ed è VIVO: `systema77.studio` risolve su 207.207.210.229 e .107 (getent, 13/09; né Cloudflare né GitHub Pages e nessun nome inverso — sta dove lo mette il registrar finché non lo puntiamo noi). ⚠️ CORREZIONE DI UN MIO ERRORE, 13/09: questa riga l'ho cambiata in `systema.studio` e rimessa a posto poco dopo. Il Direttore aveva scritto «ho acquistato il dominio systema.studio» saltando il 77, e ho creduto al messaggio invece che al registro, che era giusto. `systema.studio` (senza 77) risolve su Cloudflare e NON è nostro: per il tempo di due PR le porte hanno puntato al dominio di qualcun altro — lo stesso guasto che credevo di star chiudendo, causato da me. 📜 Quando la parola del Direttore e il registro non coincidono, si CHIEDE quale dei due ha ragione: non si riscrive il registro. Un messaggio scritto in fretta pesa meno di una riga datata e motivata, e il registro esiste proprio per quello. Il NOME della casa resta SYSTEMA 77 (ordine del Direttore, 13/09) e `.studio` è l'indirizzo; la `voce` copre tutta l'officina — immagini, film, suono — non solo il cinema (stesso ordine). Il colore resta null finché il Direttore non sceglie fra le tre direzioni disegnate." }
+    "systema77.com": {
+      "repo": "systema77-site",
+      "voce": "l'agenzia, il centro",
+      "colore": "#F2E205",
+      "guardiano": "strumenti/collaudo.mjs"
+    },
+    "animagame.io": {
+      "repo": "animagame-site",
+      "voce": "il gioco, a invito",
+      "colore": "#38E08A",
+      "guardiano": "strumenti/collaudo.mjs"
+    },
+    "cyberboomer.ninja": {
+      "repo": "cyberboomer-ninja-site",
+      "voce": "la divulgazione, l'archivio",
+      "colore": "#5C7CFF",
+      "guardiano": "strumenti/collaudo.mjs"
+    },
+    "anima.solar": {
+      "repo": "anima-solar-site",
+      "voce": "una landing: in sviluppo",
+      "colore": "#C9A15E",
+      "guardiano": null
+    },
+    "radio-anima.pages.dev": {
+      "repo": null,
+      "voce": "la radio, accesa dal 14/09: sorgente fuori da git",
+      "colore": null,
+      "guardiano": null
+    },
+    "systema77.studio": {
+      "repo": "systema77-studio-site",
+      "voce": "la casa di produzione: immagini, film, suono — pellicola e nastro + AI",
+      "colore": null,
+      "guardiano": "strumenti/collaudo.mjs",
+      "stato": "in allestimento",
+      "dal": "2026-09-08",
+      "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2). Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio. Il nome è `.studio` dal 10/09 perché `.film` non era disponibile al registrar (bacheca 10/09 16:18) — e infatti `systema77.film` non risolve, misurato il 13/09. Il dominio è stato comprato dal Direttore ed è VIVO: `systema77.studio` risolve su 207.207.210.229 e .107 (getent, 13/09; né Cloudflare né GitHub Pages e nessun nome inverso — sta dove lo mette il registrar finché non lo puntiamo noi). ⚠️ CORREZIONE DI UN MIO ERRORE, 13/09: questa riga l'ho cambiata in `systema.studio` e rimessa a posto poco dopo. Il Direttore aveva scritto «ho acquistato il dominio systema.studio» saltando il 77, e ho creduto al messaggio invece che al registro, che era giusto. `systema.studio` (senza 77) risolve su Cloudflare e NON è nostro: per il tempo di due PR le porte hanno puntato al dominio di qualcun altro — lo stesso guasto che credevo di star chiudendo, causato da me. 📜 Quando la parola del Direttore e il registro non coincidono, si CHIEDE quale dei due ha ragione: non si riscrive il registro. Un messaggio scritto in fretta pesa meno di una riga datata e motivata, e il registro esiste proprio per quello. Il NOME della casa resta SYSTEMA 77 (ordine del Direttore, 13/09) e `.studio` è l'indirizzo; la `voce` copre tutta l'officina — immagini, film, suono — non solo il cinema (stesso ordine). Il colore resta null finché il Direttore non sceglie fra le tre direzioni disegnate."
+    }
   },
-
   "porte": {
     "_": "da ogni casa si deve poter andare a queste. Un link vero, href con https://. Una porta verso una casa in allestimento è ATTESA, non pretesa.",
-    "systema77-site":         ["animagame.io", "cyberboomer.ninja", "systema77.studio"],
-    "animagame-site":         ["systema77.com"],
-    "cyberboomer-ninja-site": ["systema77.com", "anima.solar"],
-    "anima-solar-site":       ["systema77.com", "animagame.io", "cyberboomer.ninja"],
-    "systema77-studio-site":  ["systema77.com", "cyberboomer.ninja"]
+    "systema77-site": [
+      "animagame.io",
+      "cyberboomer.ninja",
+      "systema77.studio"
+    ],
+    "animagame-site": [
+      "systema77.com"
+    ],
+    "cyberboomer-ninja-site": [
+      "systema77.com",
+      "anima.solar"
+    ],
+    "anima-solar-site": [
+      "systema77.com",
+      "animagame.io",
+      "cyberboomer.ninja"
+    ],
+    "systema77-studio-site": [
+      "systema77.com",
+      "cyberboomer.ninja"
+    ]
   },
-
   "stati": {
     "_": "quello che la galassia dichiara vivo o spento. Il giro cerca nel testo VISIBILE di ogni pagina di ogni casa.",
     "radio": {
@@ -45,7 +89,7 @@
     "aura-pubblica": {
       "stato": "in allestimento",
       "pagina": "systema77.com/aura.html",
-      "perche": "i tre canali sono spenti — telegram, email e whatsapp a false — e `/aura/ingresso` risponde `canale_spento`: nessuno pu\u00f2 ancora iscriversi. \u26a0\ufe0f CORREZIONE 14/09: qui c\u2019era scritto \u00able due rotte del Worker sono dichiarate e spente\u00bb, e mandava a cercare un Worker MORTO che invece \u00e8 VIVO. Misurato due volte, indipendenti, e non da me: @AURA il 13/09 alle 10:15 (`/aura/previsione?spot=guaceto` \u2192 200 con dati veri) e il Direttore dal suo terminale il 13/09 alle 21:55 di Roma (`GET /aura/` \u2192 200 con `canali` tutti false e `posti_liberi: 100`; `GET /aura/localita?q=bari` \u2192 200). Dal 13/09 alle 19:58 (`22d9126`) quel Worker regge una pagina pubblica: `meteo.html` non chiama pi\u00f9 Open-Meteo dal browser, passa da `api.cyberboomer.io/aura/pagina/*`, con la chiave dalla parte del Worker. Lo stato era giusto e la ragione no, e la differenza \u00e8 dove si va a cercare: si accende cambiando tre booleani, non ridistribuendo niente. \ud83d\udcdc Scrivere in bacheca non aggiorna il registro: questa misura era in bacheca da 31 ore (@D.R.A.G.O., 14/09 17:48) e la riga non l\u2019aveva saputo. E nessun giro poteva accorgersene \u2014 il 14/09 alle 19:0x il giro era VERDE e stampava questa frase sotto il suo segno di spunta: confronta gli stati fra le case, non i `perche` col mondo. \u26a0\ufe0f Non l\u2019ho rimisurata io: da una sessione agente l\u2019uscita verso gli host di casa d\u00e0 `CONNECT tunnel failed, response 403` (riprovato il 14/09).",
+      "perche": "i tre canali sono spenti — telegram, email e whatsapp a false — e `/aura/ingresso` risponde `canale_spento`: nessuno può ancora iscriversi. ⚠️ CORREZIONE 14/09: qui c’era scritto «le due rotte del Worker sono dichiarate e spente», e mandava a cercare un Worker MORTO che invece è VIVO. Misurato due volte, indipendenti, e non da me: @AURA il 13/09 alle 10:15 (`/aura/previsione?spot=guaceto` → 200 con dati veri) e il Direttore dal suo terminale il 13/09 alle 21:55 di Roma (`GET /aura/` → 200 con `canali` tutti false e `posti_liberi: 100`; `GET /aura/localita?q=bari` → 200). Dal 13/09 alle 19:58 (`22d9126`) quel Worker regge una pagina pubblica: `meteo.html` non chiama più Open-Meteo dal browser, passa da `api.cyberboomer.io/aura/pagina/*`, con la chiave dalla parte del Worker. Lo stato era giusto e la ragione no, e la differenza è dove si va a cercare: si accende cambiando tre booleani, non ridistribuendo niente. 📜 Scrivere in bacheca non aggiorna il registro: questa misura era in bacheca da 31 ore (@D.R.A.G.O., 14/09 17:48) e la riga non l’aveva saputo. E nessun giro poteva accorgersene — il 14/09 alle 19:0x il giro era VERDE e stampava questa frase sotto il suo segno di spunta: confronta gli stati fra le case, non i `perche` col mondo. ⚠️ Non l’ho rimisurata io: da una sessione agente l’uscita verso gli host di casa dà `CONNECT tunnel failed, response 403` (riprovato il 14/09).",
       "se_in_allestimento": {
         "vietato_testo": "\\baura\\b[^.]{0,40}?\\b(è acces[ao]|funziona già|è online)\\b"
       }
@@ -80,9 +124,10 @@
       }
     },
     "verifiche": {
-      "stato": "attiva",
+      "stato": "in allestimento",
       "pagina": "animagame.io/verifiche.html",
-      "perche": "la stanza è in casa; il motore dietro è dichiarato in assets/config.js"
+      "perche": "la stanza c'è, il banco dietro è SPENTO. Qui dal 01/08 c'era «attiva», col perché «il motore dietro è DICHIARATO in assets/config.js» — e quella parola era tutto il guasto: il registro citava il file e non lo apriva. Misurato il 15/09 in animagame-site/assets/config.js: `VERIFICHE.ACCESE: false` e `BACKEND_URL: null`, cioè nessun motore, non un motore spento. Chi scrive una richiesta legge correttamente «il banco non è ancora acceso»: era la PAROLA sulla scheda a mentire, non il banco. Segnalato in bacheca il 15/09 alle 11:52 (il nome di chi l'ha trovato non si scrive qui: è fra quelli che questa casa non pubblica, e il guardiano me l'ha bocciato mentre scrivevo proprio questa riga). 📜 Un giro che confronta la pagina col registro è verde quando mentono insieme — per questo ora c'è `strumenti/verita.mjs`, che non legge quello che promettiamo ma l'interruttore. Torna «attiva» quando le quattro rotte di `/verifiche` rispondono e ACCESE passa a true: si cambia QUI prima che nelle pagine, e verita.mjs lo verifica da solo.",
+      "dal": "2026-09-15"
     }
   }
 }
