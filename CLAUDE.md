@@ -26,6 +26,23 @@ Quella sezione esiste perché quel passo è mancato quattro volte in un mese,
 e ogni volta il sito ha raccontato a degli sconosciuti una cosa che non era
 vera.
 
+## Se tocchi la radio
+
+```
+node strumenti/prova-onda.mjs
+```
+
+Il guardiano legge i file; questo apre `radio.html` in un browser vero, le fa
+credere che siano le 20:30 (`?finta=20:30`) e **misura da che secondo parte
+l'audio**. Serve perché `currentTime` è un numero che esiste solo mentre la
+pagina è viva: nessun grep poteva accorgersi che l'onda ripartiva da zero
+mentre la barra diceva «in diretta adesso».
+
+Ogni prova gira due volte: sulla pagina vera, dove deve passare, e su una
+copia **sabotata** dove deve fallire. Se la copia sabotata passa, il file esce
+rosso lo stesso e si dichiara inutile — 📜 *verifica che un controllo
+RIFIUTI, non solo che accetti.*
+
 ## Se tocchi uno stato dichiarato (acceso, attivo, in prova…)
 
 ```
