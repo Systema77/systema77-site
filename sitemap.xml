@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Le pagine vive di systema77.com. Fuori: 404, bilancia e meteo (staccate)
-     e storie.html (rinvio alla casa editrice). -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://systema77.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://systema77.com/servizi.html</loc><priority>0.9</priority></url>
-  <url><loc>https://systema77.com/editrice.html</loc><priority>0.8</priority></url>
-  <url><loc>https://systema77.com/shop/</loc><priority>0.8</priority></url>
-  <url><loc>https://systema77.com/officina.html</loc><priority>0.8</priority></url>
-  <url><loc>https://systema77.com/progetti.html</loc><priority>0.8</priority></url>
-  <url><loc>https://systema77.com/chill.html</loc><priority>0.7</priority></url>
-  <url><loc>https://systema77.com/divulgazione.html</loc><priority>0.7</priority></url>
-  <url><loc>https://systema77.com/formazione.html</loc><priority>0.7</priority></url>
-  <url><loc>https://systema77.com/immagini.html</loc><priority>0.6</priority></url>
-  <url><loc>https://systema77.com/film.html</loc><priority>0.6</priority></url>
-  <url><loc>https://systema77.com/musica.html</loc><priority>0.6</priority></url>
-  <url><loc>https://systema77.com/aura.html</loc><priority>0.7</priority></url>
+  <url><loc>https://systema77.com/</loc></url>
+  <url><loc>https://systema77.com/editrice.html</loc></url>
+  <url><loc>https://systema77.com/formazione.html</loc></url>
+  <url><loc>https://systema77.com/chi-siamo.html</loc></url>
+  <url><loc>https://systema77.com/shop/</loc></url>
+  <url><loc>https://systema77.com/radio.html</loc></url>
+  <url><loc>https://systema77.com/riservatezza.html</loc></url>
+  <url><loc>https://systema77.com/diritti-immagini.html</loc></url>
 </urlset>
