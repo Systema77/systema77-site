@@ -266,6 +266,7 @@ a.manifesto:hover h2{color:var(--giallo)}
 .stella.verde{--luce:var(--verde-game)} .stella.verde:hover .nome{color:var(--verde-game)}
 .stella.magenta{--luce:var(--magenta)} .stella.magenta:hover .nome{color:var(--magenta)}
 .stella.ciano{--luce:var(--ciano)} .stella.ciano:hover .nome{color:var(--ciano)}
+.stella.argento{--luce:#A9B8C6} .stella.argento:hover .nome{color:#A9B8C6}  /* lo Studio: argento pellicola, JUDY-12 */
 
 /* ── L'ORBITA — i pianeti si guardavano; adesso si muovono ────────────────
    Ordine del Direttore, 05/09: «far muovere i pianeti».
@@ -431,3 +432,22 @@ button.bottone{background:transparent; cursor:pointer; border-radius:0}
 .cielo .gradi{font-family:var(--mono); font-size:.86rem; letter-spacing:.08em; color:var(--carta)}
 .cielo .vento{font-family:var(--mono); font-size:.7rem; letter-spacing:.1em; color:var(--muto)}
 .risposta{margin-top:1.4rem; border-left:4px solid var(--ciano); padding:.9rem 1.1rem; background:#111; max-width:58ch}
+
+/* ── LA HOME A QUATTRO PORTE — JUDY, 04/10/2026 (treno T2, Galassia V2) ── */
+.casa{max-width:var(--largo);margin:0 auto;padding:1.2rem 1rem 2rem}
+.eroe{padding:1.2rem 0 1rem}
+.eroe .gigante{margin:.2rem 0 .6rem}
+.eroe .claim{margin:0 0 .4rem}
+.eroe .dice{max-width:62ch}
+.porte4{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:1rem 0 2rem}
+.porta4{display:flex;flex-direction:column;gap:.45rem;min-width:0;padding:1rem 1.1rem 1.1rem;
+  background:#141412;border:1px solid var(--linea);border-top:6px solid var(--c,var(--carta));
+  color:var(--testo);text-decoration:none}
+.porta4 .nome{font-family:var(--mono);font-size:1.05rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c,var(--carta))}
+.porta4 .che{font-family:var(--serif);font-size:1.05rem;line-height:1.4;color:var(--carta)}
+.porta4 .che a{color:var(--c,var(--carta))}
+.porta4 .dove{margin-top:auto;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--muto)}
+.porta4:hover,.porta4:focus-visible{border-color:var(--c,var(--carta));outline:none}
+.casa .galassia{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.casa .gigante{font-size:clamp(3.2rem,15vw,9rem);line-height:.9;overflow-wrap:anywhere}
+.casa,.porta4,.casa .stella{max-width:100%}
