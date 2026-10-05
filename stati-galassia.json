@@ -1,6 +1,6 @@
 {
   "_": "IL REGISTRO DELLA GALASSIA — una verità sola per tutte le case. Quando una cosa si accende o si spegne, si cambia QUI, e il giro (strumenti/galassia.mjs) controlla che ogni casa dica la stessa cosa. Lasciato da JUDY, 2026-09-05.",
-  "aggiornato": "2026-09-14",
+  "aggiornato": "2026-10-05",
   "case": {
     "_": "una casa con «stato: in allestimento» è dichiarata ma non è in rete: il giro non pretende le porte verso di lei e VIETA a ogni casa di linkarla (un link a una porta chiusa è un vicolo cieco). Quando va online si toglie lo stato, e il giro da quel momento pretende le porte.",
     "systema77.com": {
@@ -23,9 +23,9 @@
     },
     "anima.solar": {
       "repo": "anima-solar-site",
-      "voce": "una landing: in sviluppo",
+      "voce": "il mito del gioco: una pagina sola, un panorama, una frase, la porta verso animagame.io",
       "colore": "#C9A15E",
-      "guardiano": null
+      "guardiano": "strumenti/collaudo.mjs"
     },
     "radio-anima.pages.dev": {
       "repo": null,
@@ -36,11 +36,9 @@
     "systema77.studio": {
       "repo": "systema77-studio-site",
       "voce": "la casa di produzione: immagini, film, suono — pellicola e nastro + AI",
-      "colore": null,
+      "colore": "#A9B8C6",
       "guardiano": "strumenti/collaudo.mjs",
-      "stato": "in allestimento",
-      "dal": "2026-09-08",
-      "perche": "decisione del Direttore dell'08/09 (comunicazione/PIANO-LABORATORIO-2026-09-08.md, FASE 2). Entra nel registro PRIMA di esistere, apposta: una casa che non è qui il giro la ignora in silenzio. Il nome è `.studio` dal 10/09 perché `.film` non era disponibile al registrar (bacheca 10/09 16:18) — e infatti `systema77.film` non risolve, misurato il 13/09. Il dominio è stato comprato dal Direttore ed è VIVO: `systema77.studio` risolve su 207.207.210.229 e .107 (getent, 13/09; né Cloudflare né GitHub Pages e nessun nome inverso — sta dove lo mette il registrar finché non lo puntiamo noi). ⚠️ CORREZIONE DI UN MIO ERRORE, 13/09: questa riga l'ho cambiata in `systema.studio` e rimessa a posto poco dopo. Il Direttore aveva scritto «ho acquistato il dominio systema.studio» saltando il 77, e ho creduto al messaggio invece che al registro, che era giusto. `systema.studio` (senza 77) risolve su Cloudflare e NON è nostro: per il tempo di due PR le porte hanno puntato al dominio di qualcun altro — lo stesso guasto che credevo di star chiudendo, causato da me. 📜 Quando la parola del Direttore e il registro non coincidono, si CHIEDE quale dei due ha ragione: non si riscrive il registro. Un messaggio scritto in fretta pesa meno di una riga datata e motivata, e il registro esiste proprio per quello. Il NOME della casa resta SYSTEMA 77 (ordine del Direttore, 13/09) e `.studio` è l'indirizzo; la `voce` copre tutta l'officina — immagini, film, suono — non solo il cinema (stesso ordine). Il colore resta null finché il Direttore non sceglie fra le tre direzioni disegnate."
+      "perche": "online dal 04/10/2026 13:26 UTC (PR #4 di systema77-studio-site: https verde, noindex tolto). Argento pellicola #A9B8C6: JUDY-12. La storia del dominio (comprato il 10/09, `.film` non disponibile, l'errore `systema.studio` del 13/09) sta nella storia git di questa riga. Il NOME della casa resta SYSTEMA 77."
     }
   },
   "porte": {
