@@ -451,3 +451,19 @@ button.bottone{background:transparent; cursor:pointer; border-radius:0}
 .casa .galassia{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .casa .gigante{font-size:clamp(3.2rem,15vw,9rem);line-height:.9;overflow-wrap:anywhere}
 .casa,.porta4,.casa .stella{max-width:100%}
+
+/* ── LA TESTATA A QUATTRO PORTE, su tutte le pagine — JUDY, 05/10/2026 (C2, JUDY-35 = 1) ── */
+.nav4{display:flex;gap:0;flex:1 1 auto;flex-wrap:wrap}
+.nav4 a{font-family:var(--mono);font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c,var(--carta));text-decoration:none;padding:.8rem 1rem;border-left:2px solid var(--linea)}
+.nav4 a[aria-current]{border-bottom:3px solid var(--c)}
+/* la radio in barra, non più una porta: il player condiviso arriva da SUONO (radio.js) — JUDY, 05/10/2026 (V2.2, JUDY-38 = 1) */
+.studio-largo{display:grid;gap:.45rem;margin:1.6rem 0 1rem;padding-bottom:1rem;border-bottom:2px solid var(--linea);color:inherit;text-decoration:none}
+.studio-largo img{width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;display:block}
+.studio-largo .nome{font-family:var(--mono);font-size:1.05rem;letter-spacing:.18em;color:#A9B8C6}
+.studio-largo .che{font-family:var(--serif);font-size:1.15rem;line-height:1.4;color:var(--carta);max-width:58ch}
+.studio-largo .dove{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--muto)}
+.studio-largo:hover .nome,.studio-largo:focus-visible .nome{color:var(--carta)}
+.riga-piccola{font-family:var(--mono);font-size:.84rem;letter-spacing:.08em;margin:.4rem 0}
+.riga-piccola a{color:var(--muto)} .riga-piccola a:hover{color:var(--carta)}
+.riga-piccola.extra{margin-bottom:2rem}
+.radio-barra{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);text-decoration:none;padding:.6rem .9rem;border:2px solid var(--ciano);white-space:nowrap}
