@@ -44,8 +44,8 @@
   --neon:linear-gradient(90deg,var(--giallo) 0%,var(--magenta) 50%,var(--ciano) 100%);
   --alone-m:rgba(255,46,136,.16); --alone-c:rgba(22,224,220,.14);
   --alone-g:rgba(242,226,5,.12);  --alone-v:rgba(56,224,138,.14);
-  --anton:'Anton',Impact,sans-serif;
-  --archivo:'Archivo Black',Impact,sans-serif;
+  --anton:'Newsreader',Impact,sans-serif;
+  --archivo:'Newsreader',Impact,sans-serif;
   --mono:'Share Tech Mono',ui-monospace,Menlo,monospace;
   --serif:'Newsreader',Georgia,serif;
 }
