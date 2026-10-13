@@ -201,7 +201,9 @@ for (const { cosa, perche } of CASA.lessicoVietato) {
    passaggio. Una riga in più da scorrere costa dieci secondi; una promessa
    sfuggita costa la fiducia del primo sconosciuto che ci clicca sopra. */
 titolo('6 · quello che dichiariamo vivo — da aprire a mano');
-const VIVO = /\b(acces[oa]|attiv[oa]|viv[oa]|funziona gi[àa]|si guarda adesso|guardalo adesso)\b/gi;
+// Il lookahead scarta la parola quando sta dentro un nome di file (`…torcia-accesa.png`):
+// è un token con estensione, non una promessa fatta a chi legge.
+const VIVO = /\b(acces[oa]|attiv[oa]|viv[oa]|funziona gi[àa]|si guarda adesso|guardalo adesso)\b(?![\w-]*\.[a-z0-9]{2,5}\b)/gi;
 const promesse = [];
 for (const p of pagine) {
   const testo = testoVisibile(readFileSync(p, 'utf8'));
@@ -309,16 +311,26 @@ if (!BROWSER) {
         await pg.manda('Emulation.setDeviceMetricsOverride', { width: L, height: 900, deviceScaleFactor: 1, mobile: L < 500 });
         await pg.manda('Page.navigate', { url: 'file://' + p });
         await dormi(400);
-        const { result } = await pg.manda('Runtime.evaluate', {
-          expression: '({ largo: document.documentElement.scrollWidth, vista: window.innerWidth })',
-          returnByValue: true,
-        });
-        const misura = result.value;
+        // Sotto carico (più giri insieme) la finestra può non aver ancora preso la larghezza
+        // chiesta: si riapplica e si riprova, fino a 5 volte, prima di dire qualcosa.
+        let misura = null;
+        for (let t = 0; t < 5; t++) {
+          const { result } = await pg.manda('Runtime.evaluate', {
+            expression: '({ largo: document.documentElement.scrollWidth, vista: window.innerWidth, meta: !!document.querySelector(\'meta[name="viewport"]\') })',
+            returnByValue: true,
+          });
+          misura = result.value;
+          if (misura.vista === L) break;
+          await pg.manda('Emulation.setDeviceMetricsOverride', { width: L, height: 900, deviceScaleFactor: 1, mobile: L < 500 });
+          await dormi(300);
+        }
         // La larghezza chiesta dev'essere quella misurata. Senza <meta name="viewport"> il
         // browser in modo mobile ne inventa una più larga, e il controllo a 320px misurerebbe
         // una finestra che non esiste: un verde che non ha guardato niente. Provato il 13/09
         // su una pagina-esca senza quel meta — diceva 1280 mentre le chiedevo 320.
-        if (misura.vista !== L) male_a.push(`${L}px non applicata (la finestra è ${misura.vista}px): manca <meta name="viewport">?`);
+        // Dopo 5 tentativi la finestra resta più larga: o manca il meta, o un elemento è più
+        // largo della finestra e il browser mobile la allarga (353 su 320 misurato il 12/10).
+        if (misura.vista !== L) male_a.push(`${L}px non applicata (la finestra è ${misura.vista}px): ${misura.meta ? 'un elemento è più largo della finestra' : 'manca <meta name="viewport">?'}`);
         if (misura.largo > misura.vista + 1) male_a.push(`${L}px scivola (${misura.largo}>${misura.vista})`);
         const errori = pg.eventi.flatMap((e) => {
           if (e.method === 'Runtime.exceptionThrown') return [e.params.exceptionDetails?.text ?? '?'];
