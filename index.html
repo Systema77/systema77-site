@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SYSTEMA 77</title>
-<meta name="description" content="SYSTEMA 77 — vi diamo i superpoteri: immagini e film, suono, libri illustrati.">
+<meta name="description" content="SYSTEMA 77 — abbiamo i superpoteri, e siamo contenti di condividerli con voi.">
 <!-- Come il sito si vede FUORI da se': la tab del browser e l'anteprima di un
      link incollato in chat. Favicon inline (zero file), immagine di condivisione
      con la stessa palette, nessuna foto inventata. -->
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SYSTEMA 77">
 <meta property="og:title" content="SYSTEMA 77">
-<meta property="og:description" content="SYSTEMA 77 — vi diamo i superpoteri: immagini e film, suono, libri illustrati.">
+<meta property="og:description" content="SYSTEMA 77 — abbiamo i superpoteri, e siamo contenti di condividerli con voi.">
 <meta property="og:url" content="https://systema77.com/index.html">
 <meta property="og:image" content="https://systema77.com/og-systema77.png">
 <meta property="og:image:width" content="1200">
@@ -20,85 +20,53 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://systema77.com/og-systema77.png">
 <link rel="stylesheet" href="stile.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:opsz,wght@6..72,400&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="galassia.css">
+<style>
+body{margin:0;background:var(--nero);color:var(--carta)}
+.barra{display:flex;flex-wrap:wrap;align-items:stretch;border-bottom:1px solid #2a2a2a;font-family:'Share Tech Mono',monospace;text-transform:uppercase;letter-spacing:.18em;font-size:.9rem}
+.barra a{color:var(--carta);text-decoration:none;padding:1.1rem 1.1rem;border-right:1px solid #2a2a2a;display:flex;align-items:center;gap:.5rem}
+.barra a:hover{color:var(--giallo)}
+.barra .marca{color:var(--giallo);letter-spacing:.22em}
+.barra .marca b{color:var(--carta);font-weight:400}
+.barra .fuori{opacity:.85}
+.barra .fun{margin-left:auto;display:flex;border-left:1px solid #2a2a2a}
+.barra .fun span{padding:1.1rem 1rem;color:#7d7d7d;letter-spacing:.3em}
+.barra .fun a{border-right:0;border-left:1px solid #2a2a2a}
+.eroe{padding:4vw 1.4rem 2rem}
+.kick3{font-family:'Share Tech Mono',monospace;text-transform:uppercase;letter-spacing:.3em;color:var(--giallo);margin:0 0 1rem;font-size:clamp(.85rem,1.3vw,1.2rem)}
+.eroe h1{font-family:'Anton',sans-serif;font-weight:400;font-size:clamp(3.4rem,14.5vw,22rem);line-height:.82;overflow-wrap:anywhere;margin:0;letter-spacing:-.01em}
+.eroe h1 .g{color:var(--giallo)}
+.frase{font-family:'Newsreader',serif;font-size:clamp(1.8rem,4.2vw,4rem);line-height:1.08;max-width:22ch;margin:2.2rem 0 0}
+.frase em{font-style:normal;color:var(--giallo)}
+.piccola{font-family:'Share Tech Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#8a8a8a;margin-top:1.4rem;font-size:.9rem}
+.coda{display:flex;justify-content:space-between;padding:1.4rem;font-family:'Share Tech Mono',monospace;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:#7d7d7d;border-top:1px solid #2a2a2a}
+.coda a{color:inherit}
+.coda{flex-wrap:wrap;gap:.6rem}
+@media (max-width:700px){.barra{letter-spacing:.12em;font-size:.82rem}.eroe h1{font-size:clamp(3.6rem,22vw,8rem)}.coda span{overflow-wrap:anywhere}.barra .fun{margin-left:0;width:100%;border-left:0;border-top:1px solid #2a2a2a}.barra a{padding:.9rem 1rem}}
+</style>
 </head>
 <body>
-
-<header class="testata">
+<header class="barra">
   <a class="marca" href="index.html">&#9673; SYSTEMA 77</a>
-  <nav class="nav4" aria-label="Le quattro porte">
-    <a href="https://systema77.studio" rel="noopener" style="--c:#A9B8C6">Studio</a>
-    <a href="editrice.html" style="--c:var(--magenta)">Editrice</a>
-    <a href="https://cyberboomer.ninja" rel="noopener" style="--c:var(--ciano)">Voce</a>
-    <a href="shop/" style="--c:var(--giallo)">Shop</a>
+  <a href="https://systema77.studio" rel="noopener">Studio</a>
+  <a href="editrice.html">Casa editrice</a>
+  <a href="shop/">Shop</a>
+  <a class="fuori" href="https://cyberboomer.ninja" rel="noopener">Cyber Boomer &#8599;</a>
+  <nav class="fun" aria-label="Fun">
+    <span>fun</span>
+    <a href="radio.html">Radio</a>
+    <a href="meteo.html">Meteo</a>
+    <a href="https://animagame.io" rel="noopener">Anima Game &#8599;</a>
   </nav>
-  <a class="radio-barra" href="radio.html" aria-label="Ascolta Radio Systema 77">&#9654; Radio Systema 77</a>
 </header>
-
-<main class="casa">
-  <section class="eroe">
-    <div class="kick">agenzia &middot; <b>dal 2077</b></div>
-    <h1 class="gigante">SYSTEMA<br><span class="g">77.</span></h1>
-    <p class="claim">VI DIAMO I <span class="c">SUPERPOTERI</span>.</p>
-    <p class="dice forte">Siamo nel 2077: conosciamo le AI, e conosciamo il futuro.</p>
-    <p class="dice">Vi liberiamo tempo, vi facciamo spazio nella vita, e i sogni li facciamo veri.</p>
-  </section>
-
-  <a class="studio-largo" href="https://systema77.studio" rel="noopener">
-    <span class="nome">STUDIO &#8599;</span>
-    <span class="che">Film su commessa, pellicola 16 mm, panorami.</span>
-    <span class="dove">systema77.studio</span>
-  </a>
-
-  <nav class="porte4" aria-label="Le officine">
-    <a class="porta4" style="--c:#A9B8C6" href="https://systema77.studio" rel="noopener">
-      <span class="nome">OFFICINA &#8599;</span>
-      <span class="che">Fotografia e film, dal provino alla stampa.</span>
-      <span class="dove">systema77.studio</span>
-    </a>
-    <a class="porta4" style="--c:var(--ciano)" href="radio.html">
-      <span class="nome">SUONO</span>
-      <span class="che">Radio Systema 77: solo musica nostra.</span>
-    </a>
-    <a class="porta4" style="--c:var(--magenta)" href="editrice.html">
-      <span class="nome">EDITRICE</span>
-      <span class="che">Libri illustrati. Il primo, in lavorazione: <i>I segreti della baia del vento</i>.</span>
-    </a>
-  </nav>
-
-  <p class="riga-piccola"><a href="formazione.html">Automazione e corsi su richiesta &rarr;</a></p>
-  <p class="riga-piccola extra"><a href="shop/">Shop &middot; la maglietta <i>But where is everybody?</i>, da 25 &euro; &rarr;</a></p>
-
-  <section class="galassia" id="galassia">
-    <a class="stella ciano" href="https://cyberboomer.ninja" rel="noopener"><span class="nome">Cyber Boomer &#8599;</span><span class="che">lezioni gratis, aperte a tutti</span><span class="dove">cyberboomer.ninja</span></a>
-    <a class="stella verde" href="https://animagame.io" rel="noopener"><span class="nome">Anima Game &#8599;</span><span class="che">il gioco a invito</span><span class="dove">animagame.io</span></a>
-    <a class="stella argento" href="https://systema77.studio" rel="noopener"><span class="nome">Studio &#8599;</span><span class="che">la bottega del film</span><span class="dove">systema77.studio</span></a>
-    <a class="stella qui" href="formazione.html"><span class="nome">Formazione</span><span class="che">corsi per scuole, enti, aziende</span></a>
-  </section>
+<main class="eroe">
+  <p class="kick3">AI agency service &middot; since 2077</p>
+  <h1>SYSTEMA <span class="g">77.</span></h1>
+  <p class="frase">Abbiamo i <em>superpoteri</em>, e siamo contenti di condividerli con voi.</p>
+  <p class="piccola">Certo, non è gratis.</p>
 </main>
-
-<footer>
-  <div class="dentro">
-    <div class="coda-riga">
-      <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
-      <span><button type="button" class="posta" data-u="agenzia" data-d="systema77.com">scriveteci</button> &middot; <a href="chi-siamo.html">chi siamo</a> &middot; <a href="riservatezza.html">riservatezza</a></span>
-    </div>
-  </div>
-</footer>
-<style>.posta{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.posta.ok{color:var(--giallo)}</style>
-<script>
-/* TOPPA POSTA — 2026-09-07, ROGUE. Niente mailto: copia e basta. L'indirizzo e' in due pezzi, montati qui. */
-document.querySelectorAll('.posta').forEach(function(b){
-  b.addEventListener('click',function(){
-    var a=b.dataset.u+'@'+b.dataset.d,t=b.textContent;
-    (navigator.clipboard?navigator.clipboard.writeText(a):Promise.reject())
-      .then(function(){b.textContent='copiato: '+a;b.classList.add('ok')})
-      .catch(function(){b.textContent=a;b.classList.add('ok')});
-    setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);
-  });
-});
-</script>
+<footer class="coda"><span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span><span><a href="formazione.html">formazione</a> &middot; <a href="chi-siamo.html">chi siamo</a> &middot; agenzia@systema77.com</span></footer>
+<!-- home v3: JUDY, 2026-10-13, approvata dal Direttore (JUDY-63) -->
 </body>
 </html>
-<!-- home v2.2 di JUDY, 05/10/2026 (Galassia V2.2, JUDY-38 = 1): l'ordine dettato dal Direttore, le tre righe di ECHO. La home a quattro porte del 04/10 è nella storia git, PR #38. -->
