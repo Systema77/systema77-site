@@ -1,11 +1,11 @@
 <!doctype html>
-<html data-casa="com" lang="it">
+<html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Vetrina dello shop: va in systema77-site/shop/index.html (indirizzo systema77.com/shop/).
      Ordine del Direttore del 04/10 sera (treno, carro T3): la vetrina va online senza cassa.
-     Il bottone «compra» si accende dopo, con DROP-5 (link PayPal) e le condizioni di vendita.
+     I bottoni «compra» sono accesi dal 13/10: 5 link PayPal del Direttore.
      Accanto a questo file: fermi-v6-maglietta.jpg (mockup v6, 1600×800). -->
 <title>SHOP — SYSTEMA 77</title>
 <meta name="description" content="SYSTEMA 77 — Lo shop. Magliette del SYSTEMA, stampate solo quando qualcuno le compra.">
@@ -16,9 +16,12 @@
 <meta property="og:description" content="SYSTEMA 77 — Lo shop. Magliette del SYSTEMA, stampate solo quando qualcuno le compra.">
 <meta property="og:url" content="https://systema77.com/shop/">
 <meta property="og:image" content="https://systema77.com/shop/fermi-v6-maglietta.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="/stile.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="/galassia.css">
+<style>.giro-scelta{background:none;color:var(--carta);border:1px solid currentColor}.giro-scelta:hover,.giro-scelta:focus-visible{color:var(--giallo)}</style>
 </head>
 <body>
 
@@ -52,13 +55,40 @@
     <div><h2>LA MAGLIETTA<span style="color:var(--giallo)">.</span></h2></div>
     <div class="destra">
       <p class="dice forte">BUT WHERE IS EVERYBODY?</p>
-      <p class="dice">Serie 01, dieci pezzi numerati. Davanti la nostra galassia sul cuore, dietro la frase di Fermi e il cielo dove nessuno risponde. Ogni pezzo ha il suo cielo.</p>
-      <img src="fermi-v6-maglietta.jpg" width="1600" height="800" alt="La maglietta nera della serie 01: davanti una piccola galassia sul cuore con SYSTEMA 77, dietro una galassia di cerchi e la frase BUT WHERE IS EVERYBODY?" style="width:100%;max-width:640px;height:auto;display:block;margin:1rem 0">
+      <p class="dice">Serie 01, cinquanta pezzi numerati. Davanti la nostra galassia sul cuore, dietro la frase di Fermi e il cielo dove nessuno risponde. Ogni pezzo ha il suo cielo.</p>
+      <!-- INDOSSATA: 4 angoli su un corpo, uomo e donna; il robot davanti e dietro (generato da noi, 13/10) (mockup Printful Gildan 64000 nera, file v6, 13/10). Trascina per girarla; da sola gira piano. Richiesta del Direttore in chat, 13/10. -->
+      <p class="dice piccola"><button type="button" data-corpo="uomo" class="giro-scelta" style="font:inherit;padding:.3rem .8rem;margin-right:.4rem;cursor:pointer">Uomo</button><button type="button" data-corpo="donna" class="giro-scelta" style="font:inherit;padding:.3rem .8rem;margin-right:.4rem;cursor:pointer">Donna</button><button type="button" data-corpo="robot" class="giro-scelta" style="font:inherit;padding:.3rem .8rem;cursor:pointer">Robot</button></p>
+      <div id="giro" style="position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:.5rem 0 1rem;cursor:grab;touch-action:pan-y;background:#fff" aria-label="La maglietta indossata, da quattro lati: davanti la piccola galassia con SYSTEMA 77, dietro la galassia e la frase BUT WHERE IS EVERYBODY?, serie 01 numerata su 50">
+        <img id="giro-img" src="indossata-uomo-1.jpg" width="800" height="800" alt="" style="width:100%;height:100%;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none">
+      </div>
+      <p class="dice piccola">Trascina per girarla. Davanti, di lato, dietro.</p>
+      <script>
+      (function(){
+        var box=document.getElementById('giro'), img=document.getElementById('giro-img');
+        var lati={uomo:4,donna:4,robot:2}, corpo='uomo', k=0, x0=null, fermo=false, ferma=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        Object.keys(lati).forEach(function(c){for(var n=1;n<=lati[c];n++){new Image().src='indossata-'+c+'-'+n+'.jpg';}});
+        function mostra(){var L=lati[corpo];img.src='indossata-'+corpo+'-'+(((k%L)+L)%L+1)+'.jpg';}
+        document.querySelectorAll('.giro-scelta').forEach(function(b){b.addEventListener('click',function(){corpo=b.dataset.corpo;mostra();});});
+        box.addEventListener('pointerdown',function(e){fermo=true;x0=e.clientX;box.setPointerCapture(e.pointerId);box.style.cursor='grabbing';});
+        box.addEventListener('pointermove',function(e){if(x0===null)return;var d=e.clientX-x0;if(Math.abs(d)>60){k+=d>0?-1:1;x0=e.clientX;mostra();}});
+        function lascia(){x0=null;box.style.cursor='grab';setTimeout(function(){fermo=false;},4000);}
+        box.addEventListener('pointerup',lascia);box.addEventListener('pointercancel',lascia);
+        if(!ferma)setInterval(function(){if(!fermo){k++;mostra();}},1800);
+      })();
+      </script>
       <p class="dice forte">25 &euro;, spedizione in Italia compresa.</p>
-      <p class="dice piccola">Nera o bianca, stampa davanti e dietro. Taglie dalla XS alla 5XL.</p>
-      <p class="dice">Più spessa: Bella+Canvas 3010, larga, 35 &euro; (XS–3XL) · Comfort Colors 1717, pesante, 36 &euro; (S–4XL). Stessa grafica.</p>
-      <!-- BOTTONE: link PayPal per modello e taglia, dopo il verde sul registro dei marchi (TMview EM/IT: 0 risultati, 07/10) e i file online.
-           Prezzi: JUDY-42 = 1 (Gildan 25 €), DROP-7 = 2 (3010 35 €, 1717 36 €). Printful: Gildan 64000 (12), B+C 3010 (1592, tela 4200×4800), CC 1717 (586). -->
+      <p class="dice piccola">È merchandising: quasi tutto il prezzo va alla stampa e alla spedizione.</p>
+      <p class="dice piccola">Nera o bianca, stampa davanti e dietro. Taglie dalla XS alla 3XL; 4XL e 5XL a 35 &euro;.</p>
+      <p class="dice">Più spessa: Bella+Canvas 3010, larga, 35 &euro; (XS–3XL) · Comfort Colors 1717, pesante, 35 &euro; (S–3XL; 4XL a 45 &euro;). Stessa grafica.</p>
+      <!-- BOTTONI: 5 link PayPal del Direttore, 13/10 (DROP/LINK-PAYPAL-2026-10-13.md). Prezzi: JUDY-42 = 1, DROP-7 = 2, DROP-9 = 2, CC 1717 a 35 € (Direttore in chat, 13/10). -->
+      <p class="dice">
+        <a href="https://www.paypal.com/ncp/payment/SLC42MQQ2ZRNC" rel="noopener" style="display:inline-block;margin:.3rem .5rem .3rem 0;padding:.6rem 1rem;background:var(--giallo);color:#000;font-weight:700;text-decoration:none">COMPRA · Gildan 25 €</a>
+        <a href="https://www.paypal.com/ncp/payment/X9U6S8LTH23BL" rel="noopener" style="display:inline-block;margin:.3rem .5rem .3rem 0;padding:.6rem 1rem;background:var(--giallo);color:#000;font-weight:700;text-decoration:none">COMPRA · Bella+Canvas 35 €</a>
+        <a href="https://www.paypal.com/ncp/payment/UNB89G3RPB9EW" rel="noopener" style="display:inline-block;margin:.3rem .5rem .3rem 0;padding:.6rem 1rem;background:var(--giallo);color:#000;font-weight:700;text-decoration:none">COMPRA · Comfort Colors 35 €</a>
+        <a href="https://www.paypal.com/ncp/payment/S84RCJ435M74W" rel="noopener" style="display:inline-block;margin:.3rem .5rem .3rem 0;padding:.6rem 1rem;background:var(--giallo);color:#000;font-weight:700;text-decoration:none">COMPRA · Gildan 4XL o 5XL 35 €</a>
+        <a href="https://www.paypal.com/ncp/payment/6MM2CHG99XACL" rel="noopener" style="display:inline-block;margin:.3rem .5rem .3rem 0;padding:.6rem 1rem;background:var(--giallo);color:#000;font-weight:700;text-decoration:none">COMPRA · Comfort Colors 4XL 45 €</a>
+      </p>
+      <p class="dice piccola">Si paga con PayPal. Dopo il pagamento ti scriviamo, all’indirizzo che hai dato a PayPal, per taglia e colore. Spediamo solo in Italia.</p>
     </div>
   </div>
 </div>
