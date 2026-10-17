@@ -30,7 +30,9 @@ body{margin:0;background:var(--nero);color:var(--carta)}
 .barra .marca{color:var(--giallo);letter-spacing:.22em}
 .barra .marca b{color:var(--carta);font-weight:400}
 .barra .fuori{opacity:.85}
-.barra .fun{margin-left:auto;display:flex;border-left:1px solid #2a2a2a}
+.barra .lingua{margin-left:auto;border-right:0;border-left:1px solid #2a2a2a;color:var(--carta)}
+.barra .lingua b{color:var(--giallo);font-weight:400}
+.barra .fun{display:flex;border-left:1px solid #2a2a2a}
 .barra .fun span{padding:1.1rem 1rem;color:#7d7d7d;letter-spacing:.3em}
 .barra .fun a{border-right:0;border-left:1px solid #2a2a2a}
 .eroe{padding:4vw 1.4rem 2rem}
@@ -43,7 +45,7 @@ body{margin:0;background:var(--nero);color:var(--carta)}
 .coda{display:flex;justify-content:space-between;padding:1.4rem;font-family:'Share Tech Mono',monospace;font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:#7d7d7d;border-top:1px solid #2a2a2a}
 .coda a{color:inherit}
 .coda{flex-wrap:wrap;gap:.6rem}
-@media (max-width:700px){.barra{letter-spacing:.12em;font-size:.82rem}.eroe h1{font-size:clamp(3.6rem,22vw,8rem)}.coda span{overflow-wrap:anywhere}.barra .fun{margin-left:0;width:100%;border-left:0;border-top:1px solid #2a2a2a}.barra a{padding:.9rem 1rem}}
+@media (max-width:700px){.barra{letter-spacing:.12em;font-size:.82rem}.eroe h1{font-size:clamp(3.6rem,22vw,8rem)}.coda span{overflow-wrap:anywhere}.barra .lingua{margin-left:0;border-left:0}.barra .fun{width:100%;border-left:0;border-top:1px solid #2a2a2a}.barra a{padding:.9rem 1rem}}
 </style>
 </head>
 <body>
@@ -53,6 +55,7 @@ body{margin:0;background:var(--nero);color:var(--carta)}
   <a href="editrice.html">Casa editrice</a>
   <a href="shop/">Shop</a>
   <a class="fuori" href="https://cyberboomer.ninja" rel="noopener">Cyber Boomer &#8599;</a>
+  <a class="lingua" href="en/" hreflang="en" lang="en" aria-label="English">IT&nbsp;/&nbsp;<b>EN</b></a>
   <nav class="fun" aria-label="Fun">
     <span>fun</span>
     <a href="radio.html">Radio</a>
