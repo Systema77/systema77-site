@@ -52,6 +52,17 @@
   </div>
 </div>
 
+<div class="blocco" id="studenti">
+  <div class="dentro">
+    <!-- STUDENTI: i film fatti con le scuole. Il primo: Pavia, 2026 (CHRONO, 17/10). Streaming HLS da cinema-systema77.pages.dev:
+         4K, 1080p, 720p, la qualità la sceglie la connessione. Musica originale di SUONO (garanzia rights: own). -->
+    <h2>STUDENTI<span style="color:var(--magenta)">.</span></h2>
+    <p class="dice forte">Il primo film della sala è degli studenti.</p>
+    <p class="dice">«Libro, sostantivo femminile», un book trailer girato con il Master in Professioni e Prodotti dell&rsquo;Editoria dell&rsquo;Universit&agrave; di Pavia, 2026.</p>
+    <video id="film-pavia" controls playsinline preload="none" poster="img/cinema-pavia-poster.jpg" width="1280" height="720" style="width:100%;max-width:1100px;height:auto;display:block;margin:1rem 0;background:#000" aria-label="Libro, sostantivo femminile: il book trailer degli studenti del Master di Pavia"></video>
+    <p class="dice piccola">Musica originale SYSTEMA 77. La qualit&agrave; si adatta alla vostra connessione, fino al 4K.</p>
+  </div>
+</div>
 <div class="blocco" id="cosa">
   <div class="dentro">
     <h2>COSA FACCIAMO<span style="color:var(--giallo)">.</span></h2>
@@ -116,6 +127,14 @@ document.querySelectorAll('.posta').forEach(function(b){
     setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);
   });
 });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
+<script>
+/* Il film degli studenti: Safari legge l'HLS da solo, gli altri con hls.js. */
+(function(){var v=document.getElementById('film-pavia'),u='https://cinema-systema77.pages.dev/pavia/master.m3u8';
+if(!v)return;
+if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=u}
+else if(window.Hls&&Hls.isSupported()){var h=new Hls({capLevelToPlayerSize:true});h.loadSource(u);h.attachMedia(v)}})();
 </script>
 <!-- — creato da ECHO, 2026-09-28 -->
 </body>
