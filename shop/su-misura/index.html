@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Shop su misura: il cliente porta la sua grafica (richiesta del Direttore, 17/10).
+     Parla col Worker api.cyberboomer.io/su-misura (DROP/vetrina/su-misura/worker in ROOT_CLODE).
+     Con ?r=<token> la stessa pagina diventa lo stato della richiesta: controllo, anteprima, approvazione. -->
+<title>SU MISURA — SYSTEMA 77</title>
+<meta name="description" content="SYSTEMA 77 — La tua grafica, la nostra stampa. Da una maglietta a mille, il prezzo lo vedi subito.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230A0A0A'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23F2E205' stroke-width='7'/%3E%3Ccircle cx='32' cy='32' r='7.5' fill='%23F2E205'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SYSTEMA 77">
+<meta property="og:title" content="SU MISURA — SYSTEMA 77">
+<meta property="og:description" content="La tua grafica, la nostra stampa. Da una maglietta a mille, il prezzo lo vedi subito.">
+<meta property="og:url" content="https://systema77.com/shop/su-misura/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="/stile.css">
+<link rel="stylesheet" href="/galassia.css">
+<style>
+.sm fieldset{border:1px solid var(--linea,#333);padding:1rem;margin:0 0 1rem}
+.sm legend{font-family:'Share Tech Mono',monospace;padding:0 .4rem}
+.sm label{display:block;margin:.4rem 0}
+.sm input[type=email],.sm input[type=number],.sm select,.sm textarea{font:inherit;padding:.4rem;background:transparent;color:inherit;border:1px solid currentColor;max-width:100%}
+.sm .taglie{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:.5rem}
+.sm .taglie input{width:100%}
+.sm button{font:inherit;font-weight:700;padding:.6rem 1rem;background:var(--giallo);color:#000;border:0;cursor:pointer}
+.sm button[disabled]{opacity:.5;cursor:default}
+.sm .nota{border-left:3px solid var(--giallo);padding:.2rem .8rem;margin:.5rem 0}
+.sm .no{border-left-color:var(--magenta)}
+.sm :focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
+.sm button,.sm input[type=email],.sm input[type=number],.sm select{min-height:44px}
+.sm .trappola{position:absolute;left:-9999px}
+.sm img.anteprima{width:100%;max-width:420px;display:block;background:#fff;margin:.5rem 0}
+</style>
+</head>
+<body>
+
+<header class="testata">
+  <a class="marca" href="/index.html">&#9673; SYSTEMA 77</a>
+  <nav class="nav4" aria-label="Le quattro porte">
+    <a href="https://systema77.studio" rel="noopener" style="--c:#A9B8C6">Studio</a>
+    <a href="/editrice.html" style="--c:var(--magenta)">Editrice</a>
+    <a href="https://cyberboomer.ninja" rel="noopener" style="--c:var(--ciano)">Voce</a>
+    <a href="/shop/" style="--c:var(--giallo)" aria-current="page">Shop</a>
+  </nav>
+  <a class="radio-barra" href="/radio.html" aria-label="Ascolta Radio Systema 77">&#9654; Radio Systema 77</a>
+</header>
+
+<main class="sm">
+<div class="annuncio">
+  <div class="dentro due">
+    <div>
+      <div class="kick">shop &middot; <b>su misura</b></div>
+      <h1>SU MISURA<span class="m">.</span></h1>
+    </div>
+    <div class="destra">
+      <p class="claim">LA TUA GRAFICA, <span class="g">LA NOSTRA STAMPA</span>.</p>
+      <p class="dice forte">Da una maglietta a mille. Il prezzo lo vedi mentre scegli.</p>
+    </div>
+  </div>
+</div>
+
+<!-- LA RICHIESTA -->
+<div class="blocco" id="vista-richiesta">
+  <div class="dentro due">
+    <div><h2>COME FUNZIONA<span style="color:var(--giallo)">.</span></h2>
+      <p class="dice piccola">1 · Carichi la grafica e scegli.<br>2 · Il nostro controllo guarda il file e ti risponde subito.<br>3 · Vedi l’anteprima e approvi.<br>4 · Paghi, e si stampa.</p>
+      <p class="dice piccola">Le tre magliette sono spiegate nello <a href="/shop/">shop</a>.</p>
+    </div>
+    <div class="destra">
+      <form id="modulo" novalidate>
+        <fieldset><legend>1 · LA GRAFICA</legend>
+          <label>Fronte (PNG o JPG, fino a 20 MB) <input type="file" name="fronte" accept="image/png,image/jpeg" required></label>
+          <label>Retro, se lo vuoi <input type="file" name="retro" accept="image/png,image/jpeg"></label>
+          <p class="dice piccola">Meglio un PNG col fondo trasparente, almeno 1800×2400 px per tutta l’area.</p>
+        </fieldset>
+        <fieldset><legend>2 · LA MAGLIETTA</legend>
+          <div id="modelli"><p class="dice piccola">Carico il catalogo…</p></div>
+          <label>Colore <select name="colore" id="colore"></select></label>
+        </fieldset>
+        <fieldset><legend>3 · TAGLIE E QUANTITÀ</legend>
+          <div class="taglie" id="taglie"></div>
+        </fieldset>
+        <fieldset><legend>4 · IL PREZZO</legend>
+          <p class="dice forte" id="prezzo" aria-live="polite">Scegli almeno una taglia.</p>
+          <p class="dice piccola">IVA e spedizione in Italia comprese.</p>
+        </fieldset>
+        <fieldset><legend>5 · CHI SEI</legend>
+          <label>Email, per ricevere il link della tua richiesta <input type="email" name="email" required autocomplete="email"></label>
+          <label>Una nota, se serve <textarea name="nota" rows="2" maxlength="500"></textarea></label>
+          <label class="trappola" aria-hidden="true">Sito <input type="text" name="sito" tabindex="-1" autocomplete="off"></label>
+          <label><input type="checkbox" name="diritti" required> La grafica è mia, o ho il diritto di stamparla.</label>
+          <p class="dice piccola">Le magliette su misura non si possono restituire per ripensamento, perché sono fatte per te. <a href="/shop/condizioni/">Condizioni</a> · <a href="/riservatezza.html#su-misura">riservatezza</a>.</p>
+        </fieldset>
+        <button type="submit" id="manda">MANDA AL CONTROLLO</button>
+        <p class="dice" id="esito" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- LO STATO (con ?r=) -->
+<div class="blocco" id="vista-stato" hidden>
+  <div class="dentro due">
+    <div><h2>LA TUA RICHIESTA<span style="color:var(--giallo)">.</span></h2>
+      <p class="dice piccola">Tieni questo link: è solo tuo.</p>
+      <p class="dice forte" id="s-stato"></p>
+      <p class="dice" id="s-cosa"></p>
+      <p class="dice forte" id="s-prezzo"></p>
+    </div>
+    <div class="destra">
+      <div id="s-anteprima"></div>
+      <div id="s-verdetto"></div>
+      <form id="s-ricarica" hidden>
+        <fieldset><legend>RICARICA IL FILE</legend>
+          <label>Fronte <input type="file" name="fronte" accept="image/png,image/jpeg"></label>
+          <label id="s-retro">Retro <input type="file" name="retro" accept="image/png,image/jpeg"></label>
+          <button type="submit">RICONTROLLA</button>
+        </fieldset>
+      </form>
+      <p><button type="button" id="s-approva" hidden>APPROVO, VAI AL PAGAMENTO</button></p>
+      <p class="dice" id="s-esito" aria-live="polite"></p>
+      <details><summary class="dice piccola">Il registro</summary><ol class="dice piccola" id="s-passi"></ol></details>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="dentro">
+    <div class="coda-riga">
+      <span>&copy; 2026&rarr;2077 &middot; SYSTEMA 77</span>
+      <span><a href="/shop/">shop</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var API = location.hostname === 'localhost' ? 'http://localhost:8790/su-misura' : 'https://api.cyberboomer.io/su-misura';
+  var $ = function(id){ return document.getElementById(id); };
+  var STATI = { da_correggere: 'Da correggere', pronta: 'Pronta: guarda e approva', approvata: 'Approvata', pagata: 'Pagata', in_stampa: 'In stampa', chiusa: 'Chiusa' };
+  var euro = function(n){ return n.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' }); };
+  function el(tag, testo, cls){ var e = document.createElement(tag); if (testo) e.textContent = testo; if (cls) e.className = cls; return e; }
+  function chiedi(via, opz){
+    return fetch(API + via, opz).then(function(r){ return r.json().then(function(d){ if (!r.ok) throw new Error(d.messaggio || 'Qualcosa non va: riprova.'); return d; }); });
+  }
+
+  var token = new URLSearchParams(location.search).get('r');
+  if (token && /^[0-9a-f]{32}$/.test(token)) return stato();
+
+  /* ── la richiesta ── */
+  var cat = null, modulo = $('modulo'), attesa = null;
+  chiedi('/catalogo').then(function(c){
+    cat = c; var box = $('modelli'); box.textContent = '';
+    Object.keys(c).forEach(function(k, i){
+      var l = el('label'); var r = el('input'); r.type = 'radio'; r.name = 'modello'; r.value = k; r.checked = i === 0;
+      r.addEventListener('change', modello); l.appendChild(r); l.appendChild(document.createTextNode(' ' + c[k].nome)); box.appendChild(l);
+    });
+    modello();
+  }).catch(function(e){ $('modelli').textContent = e.message; });
+
+  function scelto(){ var r = modulo.querySelector('input[name=modello]:checked'); return r && r.value; }
+  function modello(){
+    var m = cat[scelto()], sel = $('colore'), prima = sel.value; sel.textContent = '';
+    Object.keys(m.colori).forEach(function(c){ var o = el('option', c); o.value = c; sel.appendChild(o); });
+    sel.value = m.colori[prima] ? prima : (m.colori.Black ? 'Black' : Object.keys(m.colori)[0]);
+    var box = $('taglie'), vecchie = taglie(); box.textContent = '';
+    m.taglie.forEach(function(t){
+      var l = el('label', t + ' '); var n = el('input'); n.type = 'number'; n.min = 0; n.max = 1000; n.step = 1; n.dataset.taglia = t; n.value = vecchie[t] || '';
+      n.addEventListener('input', prezzo); l.appendChild(n); box.appendChild(l);
+    });
+    prezzo();
+  }
+  function taglie(){ var o = {}; document.querySelectorAll('#taglie input').forEach(function(n){ var q = parseInt(n.value, 10); if (q > 0) o[n.dataset.taglia] = q; }); return o; }
+  function lati(){ return modulo.retro.files.length ? 'front,back' : 'front'; }
+  function prezzo(){
+    clearTimeout(attesa);
+    var t = taglie(); if (!Object.keys(t).length) { $('prezzo').textContent = 'Scegli almeno una taglia.'; return; }
+    $('prezzo').textContent = 'Calcolo…';
+    attesa = setTimeout(function(){
+      chiedi('/prezzo', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ modello: scelto(), colore: $('colore').value, taglie: t, lati: lati() }) })
+        .then(function(p){ $('prezzo').textContent = euro(p.prezzo) + ' per ' + p.pezzi + (p.pezzi === 1 ? ' maglietta' : ' magliette') + (p.pezzi > 1 ? ' · ' + euro(p.al_pezzo) + ' l’una' : ''); })
+        .catch(function(e){ $('prezzo').textContent = e.message; });
+    }, 400);
+  }
+  $('colore').addEventListener('change', prezzo);
+  modulo.retro.addEventListener('change', prezzo);
+
+  modulo.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var esito = $('esito');
+    if (!modulo.fronte.files.length) { esito.textContent = 'Carica la grafica per il fronte.'; return; }
+    if (!Object.keys(taglie()).length) { esito.textContent = 'Scegli almeno una taglia.'; return; }
+    if (!modulo.email.checkValidity()) { esito.textContent = 'Controlla l’indirizzo email.'; return; }
+    if (!modulo.diritti.checked) { esito.textContent = 'Serve la conferma sulla grafica.'; return; }
+    var f = new FormData(modulo); f.set('taglie', JSON.stringify(taglie())); f.set('modello', scelto());
+    if (!modulo.retro.files.length) f.delete('retro');
+    $('manda').disabled = true; esito.textContent = 'Carico e controllo…';
+    chiedi('/richiesta', { method: 'POST', body: f })
+      .then(function(d){ location.href = location.pathname + '?r=' + d.token; })
+      .catch(function(e){ esito.textContent = e.message; $('manda').disabled = false; });
+  });
+
+  /* ── lo stato ── */
+  function stato(){
+    $('vista-richiesta').hidden = true; $('vista-stato').hidden = false;
+    chiedi('/r/' + token).then(mostra).catch(function(e){ $('s-stato').textContent = e.message; });
+  }
+  function mostra(d){
+    $('s-stato').textContent = STATI[d.stato] || d.stato;
+    var pezzi = Object.keys(d.taglie).reduce(function(s, k){ return s + d.taglie[k]; }, 0);
+    $('s-cosa').textContent = d.nome + ', ' + d.colore + ', ' + (d.lati === 'front' ? 'fronte' : 'fronte e retro') + ' · ' + Object.keys(d.taglie).map(function(k){ return k + ' ×' + d.taglie[k]; }).join(', ') + ' (' + pezzi + ')';
+    $('s-prezzo').textContent = euro(d.prezzo) + ', IVA e spedizione in Italia comprese';
+    var a = $('s-anteprima'); a.textContent = '';
+    if (d.anteprima) { var i = el('img', '', 'anteprima'); i.src = d.anteprima; i.alt = 'Anteprima della maglietta con la tua grafica'; a.appendChild(i); }
+    else if (d.stato === 'pronta') { a.appendChild(el('p', 'L’anteprima arriva fra pochi secondi…', 'dice piccola')); setTimeout(stato, 8000); }
+    var v = $('s-verdetto'); v.textContent = '';
+    d.verdetto.forEach(function(x){
+      v.appendChild(el('p', (x.lato === 'fronte' ? 'FRONTE' : 'RETRO') + (x.px ? ' · ' + x.px[0] + '×' + x.px[1] + ' px' : ''), 'dice piccola'));
+      x.note.forEach(function(n){ v.appendChild(el('p', n, 'dice nota' + (x.ok ? '' : ' no'))); });
+    });
+    $('s-ricarica').hidden = !(d.stato === 'da_correggere' || d.stato === 'pronta');
+    $('s-retro').hidden = d.lati === 'front';
+    $('s-approva').hidden = !(d.stato === 'pronta' || (d.stato === 'approvata' && d.pagamento_attivo));
+    if (d.stato === 'approvata' && !d.pagamento_attivo) $('s-esito').textContent = 'Approvata. Il pagamento online si accende a giorni: ti scriviamo all’indirizzo che ci hai dato.';
+    var p = $('s-passi'); p.textContent = '';
+    d.passi.forEach(function(x){ p.appendChild(el('li', x.ora.slice(0, 16) + ' · ' + x.chi + ' · ' + x.cosa)); });
+  }
+  $('s-ricarica').addEventListener('submit', function(ev){
+    ev.preventDefault(); var f = new FormData(ev.target);
+    ['fronte', 'retro'].forEach(function(k){ var x = f.get(k); if (!x || !x.size) f.delete(k); });
+    $('s-esito').textContent = 'Ricontrollo…';
+    chiedi('/r/' + token + '/file', { method: 'POST', body: f }).then(function(){ $('s-esito').textContent = ''; ev.target.reset(); stato(); })
+      .catch(function(e){ $('s-esito').textContent = e.message; });
+  });
+  $('s-approva').addEventListener('click', function(){
+    $('s-approva').disabled = true; $('s-esito').textContent = 'Un momento…';
+    chiedi('/r/' + token + '/approva', { method: 'POST' }).then(function(d){
+      if (d.paga) { location.href = d.paga; return; }
+      $('s-esito').textContent = d.messaggio || ''; stato();
+    }).catch(function(e){ $('s-esito').textContent = e.message; $('s-approva').disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
+<!-- creato da DROP, 2026-10-17 -->
