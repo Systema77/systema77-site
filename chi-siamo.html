@@ -26,6 +26,7 @@
     <a href="https://cyberboomer.ninja" rel="noopener" style="--c:var(--ciano)">Voce</a>
     <a href="shop/" style="--c:var(--giallo)">Shop</a>
   </nav>
+  <a class="lingua" href="en/about.html" hreflang="en" lang="en" aria-label="English">IT&nbsp;/&nbsp;<b>EN</b></a>
   <a class="radio-barra" href="radio.html" aria-label="Ascolta Radio Systema 77">&#9654; Radio Systema 77</a>
 </header>
 
@@ -75,7 +76,8 @@
   </div>
 </footer>
 <style>.posta{font:inherit;color:var(--giallo);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.posta.ok{color:var(--carta)}
-.nav4{display:flex;gap:0;flex:1 1 auto;flex-wrap:wrap}.nav4 a{font-family:var(--mono);font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c,var(--carta));text-decoration:none;padding:.8rem 1rem;border-left:2px solid var(--linea)}.nav4 a[aria-current]{border-bottom:3px solid var(--c)}</style>
+.nav4{display:flex;gap:0;flex:1 1 auto;flex-wrap:wrap}.nav4 a{font-family:var(--mono);font-size:.84rem;letter-spacing:.18em;text-transform:uppercase;color:var(--c,var(--carta));text-decoration:none;padding:.8rem 1rem;border-left:2px solid var(--linea)}.nav4 a[aria-current]{border-bottom:3px solid var(--c)}
+.lingua{font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--carta);text-decoration:none;padding:.6rem .9rem;white-space:nowrap;display:flex;align-items:center}.lingua b{color:var(--giallo);font-weight:400}</style>
 <script>
 document.querySelectorAll('.posta').forEach(function(b){b.addEventListener('click',function(){var a=b.dataset.u+'@'+b.dataset.d,t=b.textContent;(navigator.clipboard?navigator.clipboard.writeText(a):Promise.reject()).then(function(){b.textContent='copiato';b.classList.add('ok')}).catch(function(){b.classList.add('ok')});setTimeout(function(){b.textContent=t;b.classList.remove('ok')},4000);});});
 </script>
