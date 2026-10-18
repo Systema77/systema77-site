@@ -24,14 +24,18 @@
 .sm legend{font-family:'Share Tech Mono',monospace;padding:0 .4rem}
 .sm label{display:block;margin:.4rem 0}
 .sm input[type=email],.sm input[type=number],.sm select,.sm textarea{font:inherit;padding:.4rem;background:transparent;color:inherit;border:1px solid currentColor;max-width:100%}
-.sm .taglie{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:.5rem}
+.sm .taglie{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.5rem,1fr));gap:.5rem}
 .sm .taglie input{width:100%}
+.sm .taglie label{display:flex;flex-direction:column;gap:.2rem}
 .sm button{font:inherit;font-weight:700;padding:.6rem 1rem;background:var(--giallo);color:#000;border:0;cursor:pointer}
 .sm button[disabled]{opacity:.5;cursor:default}
 .sm .nota{border-left:3px solid var(--giallo);padding:.2rem .8rem;margin:.5rem 0}
 .sm .no{border-left-color:var(--magenta)}
 .sm :focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
 .sm button,.sm input[type=email],.sm input[type=number],.sm select{min-height:44px}
+.sm fieldset,.sm .destra{min-width:0}
+.sm input[type=file]{max-width:100%}
+.sm label:has(input[type=checkbox]),.sm label:has(input[type=radio]){min-height:44px;display:flex;align-items:center;gap:.5rem}
 .sm .trappola{position:absolute;left:-9999px}
 .sm img.anteprima{width:100%;max-width:420px;display:block;background:#fff;margin:.5rem 0}
 </style>
@@ -53,7 +57,7 @@
 <div class="annuncio">
   <div class="dentro due">
     <div>
-      <div class="kick">shop &middot; <b>su misura</b></div>
+      <div class="kick">shop &middot; <b>la tua grafica</b></div>
       <h1>SU MISURA<span class="m">.</span></h1>
     </div>
     <div class="destra">
